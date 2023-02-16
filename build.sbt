@@ -1,5 +1,6 @@
 import uk.gov.hmrc.DefaultBuildSettings.integrationTestSettings
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
+import com.lucidchart.sbt.scalafmt.ScalafmtCorePlugin.autoImport._
 
 lazy val microservice = Project("digital-contact-stub", file("."))
   .enablePlugins(play.sbt.PlayScala, SbtDistributablesPlugin)
