@@ -1,4 +1,4 @@
-import uk.gov.hmrc.DefaultBuildSettings.integrationTestSettings
+import com.lucidchart.sbt.scalafmt.ScalafmtCorePlugin.autoImport._
 
 lazy val microservice = Project("digital-contact-stub", file("."))
   .enablePlugins(play.sbt.PlayScala, SbtDistributablesPlugin)
@@ -12,7 +12,5 @@ lazy val microservice = Project("digital-contact-stub", file("."))
     scalacOptions += "-Wconf:cat=unused-imports&src=html/.*:s",
     pipelineStages := Seq(gzip),
   )
-  .configs(IntegrationTest)
-  .settings(integrationTestSettings(): _*)
   .settings(resolvers += Resolver.jcenterRepo)
   .settings(CodeCoverageSettings.settings: _*)

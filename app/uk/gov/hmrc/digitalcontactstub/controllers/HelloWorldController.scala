@@ -23,9 +23,8 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.Future
 
 @Singleton
-class HelloWorldController @Inject()(
-  mcc: MessagesControllerComponents,
-  helloWorldPage: HelloWorldPage)
+class HelloWorldController @Inject()(mcc: MessagesControllerComponents,
+                                     helloWorldPage: HelloWorldPage)
     extends FrontendController(mcc) {
 
   val helloWorld: Action[AnyContent] = Action.async { implicit request =>
