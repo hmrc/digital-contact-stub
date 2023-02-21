@@ -16,29 +16,27 @@
 
 package uk.gov.hmrc.digitalcontactstub.service
 
-import org.joda.time.LocalDate
+import com.ibm.icu.text.SimpleDateFormat
+import org.joda.time.{DateTimeZone, LocalDate, LocalDateTime}
 import uk.gov.hmrc.digitalcontactstub.models.email.{EmailContent, EmailQueued}
 import uk.gov.hmrc.digitalcontactstub.repositories.EmailQueueRepository
 
+import java.time.format.DateTimeFormatter
+import java.time.temporal.TemporalUnit
+import java.time.{Clock, Instant, ZoneId, ZoneOffset, ZonedDateTime}
+import java.util.{TimeZone, UUID}
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class EmailQueueService @Inject()(emailQueueRepository: EmailQueueRepository) {
 
- // private def now = LocalDate.now().
+  private def now = Instant.now()
+  private def uuid = UUID.randomUUID()
 
+  def addToQueue(emailContent: EmailContent)(implicit ec: ExecutionContext): Future[EmailQueued] = {
 
-  def addToQueue(emailContent: EmailContent)(implicit ec: ExecutionContext) = {
-
-
-    Future.successful(true)
-
-//    emailQueueRepository.save(emailContent) match {
-//      case true => EmailQueued(LocalDate.now())
-//    }
-
-
+   emailQueueRepository.save(emailContent).map(_ => EmailQueued(now.toString,uuid.toString, emailContent.to.map(_.correlationId).head, "queued"))
   }
 
 

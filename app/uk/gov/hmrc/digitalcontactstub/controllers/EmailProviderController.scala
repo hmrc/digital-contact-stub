@@ -33,14 +33,7 @@ class EmailProviderController @Inject()(cc: MessagesControllerComponents, emailQ
 
   def sendEmailToImi: Action[JsValue] = Action.async(parse.json) { implicit request =>
     withJsonBody[EmailContent]{email =>
-      emailQueueService.addToQueue(email) map {
-        case true =>  Created(Json.toJson(EmailQueued("time", "id", "c", "s")))
-        case false => ServiceUnavailable
-
-      }
-
+      emailQueueService.addToQueue(email).map(result => Created(Json.toJson(result)))
     }
-
   }
-
 }

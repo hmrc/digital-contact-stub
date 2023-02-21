@@ -1,2 +1,9 @@
+###
+# summary: Send email to IMI
+# responses:
+#   201:
+#     description: payload added to mongo and queued item returned
+###
+
 +nocsrf
 POST         /v2/messages      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.sendEmailToImi
