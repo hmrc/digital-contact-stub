@@ -14,21 +14,24 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.digitalcontactstub.controllers
+package uk.gov.hmrc.digitalcontactstub.repositories
 
-import uk.gov.hmrc.digitalcontactstub.views.html.HelloWorldPage
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.digitalcontactstub.models.email.EmailContent
+import uk.gov.hmrc.mongo.MongoComponent
+import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
+
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class HelloWorldController @Inject()(mcc: MessagesControllerComponents,
-                                     helloWorldPage: HelloWorldPage)
-    extends FrontendController(mcc) {
+class EmailQueueRepository @Inject()(mongo: MongoComponent)(implicit ec: ExecutionContext) extends PlayMongoRepository[EmailContent](
+  mongo,
+  "email_queue",
+  EmailContent.format,
+  Seq.empty
+){
 
-  val helloWorld: Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok("sdfafa"))
-  }
+  def save(emailContent: EmailContent): Future[Boolean] = collection.insertOne(emailContent).toFuture().map(_.wasAcknowledged())
+
 
 }

@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.digitalcontactstub.controllers
+package uk.gov.hmrc.digitalcontactstub.filters
 
-import uk.gov.hmrc.digitalcontactstub.views.html.HelloWorldPage
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import com.kenshoo.play.metrics.MetricsFilter
+import play.api.http.DefaultHttpFilters
+import play.filters.cors.CORSFilter
+import uk.gov.hmrc.play.bootstrap.filters.{AuditFilter, CacheControlFilter, LoggingFilter, MDCFilter}
+
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.Future
 
 @Singleton
-class HelloWorldController @Inject()(mcc: MessagesControllerComponents,
-                                     helloWorldPage: HelloWorldPage)
-    extends FrontendController(mcc) {
-
-  val helloWorld: Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok("sdfafa"))
-  }
-
-}
+class MicroserviceFilters @Inject()(
+  metricsFilter: MetricsFilter,
+  auditFilter: AuditFilter,
+  loggingFilter: LoggingFilter,
+  cacheFilter: CacheControlFilter,
+  mdcFilter: MDCFilter,
+  corsFilter: CORSFilter
+) extends DefaultHttpFilters(metricsFilter, auditFilter, loggingFilter, cacheFilter, mdcFilter, corsFilter)

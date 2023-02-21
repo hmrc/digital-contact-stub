@@ -14,21 +14,32 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.digitalcontactstub.controllers
+package uk.gov.hmrc.digitalcontactstub.service
 
-import uk.gov.hmrc.digitalcontactstub.views.html.HelloWorldPage
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import org.joda.time.LocalDate
+import uk.gov.hmrc.digitalcontactstub.models.email.{EmailContent, EmailQueued}
+import uk.gov.hmrc.digitalcontactstub.repositories.EmailQueueRepository
+
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class HelloWorldController @Inject()(mcc: MessagesControllerComponents,
-                                     helloWorldPage: HelloWorldPage)
-    extends FrontendController(mcc) {
+class EmailQueueService @Inject()(emailQueueRepository: EmailQueueRepository) {
 
-  val helloWorld: Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok("sdfafa"))
+ // private def now = LocalDate.now().
+
+
+  def addToQueue(emailContent: EmailContent)(implicit ec: ExecutionContext) = {
+
+
+    Future.successful(true)
+
+//    emailQueueRepository.save(emailContent) match {
+//      case true => EmailQueued(LocalDate.now())
+//    }
+
+
   }
+
 
 }

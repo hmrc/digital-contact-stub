@@ -1,0 +1,2 @@
++nocsrf
+POST         /v2/messages      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.sendEmailToImi
