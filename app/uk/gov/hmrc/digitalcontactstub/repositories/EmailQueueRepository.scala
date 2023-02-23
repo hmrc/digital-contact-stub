@@ -44,7 +44,7 @@ class EmailQueueRepository @Inject()(mongo: MongoComponent)(
 
   def deleteItem(id: String) =
     collection
-      .deleteMany(Filters.eq("to.correlationId", id))
+      .deleteOne(Filters.eq("to.correlationId", id))
       .toFuture()
       .map(_.wasAcknowledged())
 

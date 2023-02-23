@@ -62,7 +62,7 @@ class EmailProviderController @Inject()(
   def deleteQueueItem(id: String) = Action.async { implicit request =>
     emailQueueService
       .deleteQueueItem(id)
-      .flatMap(_ => emailQueueService.getQueue.map(x => Ok(viewEmailQueue(x))))
+      .map(_ => Redirect(routes.EmailProviderController.viewQueue))
   }
 
 }
