@@ -1,5 +1,6 @@
 # microservice specific routes
 
+->         /imi                     imi.Routes
 ->         /hmrc-frontend           hmrcfrontend.Routes
 GET        /                        uk.gov.hmrc.digitalcontactstub.controllers.HelloWorldController.helloWorld
 GET        /assets/*file            controllers.Assets.versioned(path = "/public", file: Asset)

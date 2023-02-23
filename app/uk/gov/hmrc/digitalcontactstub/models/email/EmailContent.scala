@@ -19,13 +19,13 @@ package uk.gov.hmrc.digitalcontactstub.models.email
 import play.api.libs.json.{Json, OFormat}
 
 final case class EmailContent(
-                               channel: String,
-                               from: String,
-                               to: List[To],
-                               callbackData: String,
-                               options: Options,
-                               content: Content
-                             )
+    channel: String,
+    from: String,
+    to: List[To],
+    callbackData: String,
+    options: Options,
+    content: Content
+)
 
 final case class EmailAddress(value: String)
 
@@ -33,28 +33,33 @@ object EmailAddress {
   implicit val format: OFormat[EmailAddress] = Json.format[EmailAddress]
 }
 
-  final case class To(email: List[String], correlationId: String)
+final case class To(email: List[String], correlationId: String)
 object To {
   implicit val format: OFormat[To] = Json.format[To]
 
 }
 
-  final case class Content(`type`: String, subject: String, replyTo: Option[EmailAddress], text: String, html: String)
+final case class Content(`type`: String,
+                         subject: String,
+                         replyTo: Option[EmailAddress],
+                         text: String,
+                         html: String)
 
 object Content {
 
   implicit val format: OFormat[Content] = Json.format[Content]
 }
 
-
-  final case class Options(trackClicks: Boolean, trackOpens: Boolean, fromName: String)
+final case class Options(trackClicks: Boolean,
+                         trackOpens: Boolean,
+                         fromName: String)
 
 object Options {
 
   implicit val format: OFormat[Options] = Json.format[Options]
 }
 
-  object EmailContent {
+object EmailContent {
   implicit val format: OFormat[EmailContent] = Json.format[EmailContent]
 }
 

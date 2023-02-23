@@ -1,9 +1,50 @@
 ###
 # summary: Send email to IMI
+# full-url: http://host:port/digital-contact-stub/imi/v2/messages
 # responses:
 #   201:
-#     description: payload added to mongo and queued item returned
+#     description: payload accepted and returns queued item
 ###
 
 +nocsrf
-POST         /v2/messages      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.sendEmailToImi
+POST         /v2/messages      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.sendEmailToImiQueue
+
+
+###
+# summary: Remove email queue
+# full-url: http://host:port/digital-contact-stub/imi/messages
+# responses:
+#   202:
+#     description: queue reset
+###
++nocsrf
+DELETE         /messages      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.resetQueue
+
+
+###
+# summary: View email queue
+# full-url: http://host:port/digital-contact-stub/imi/messages
+# responses:
+#   200:
+#     description: view queues
+###
+GET         /messages      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.viewQueue
+
+###
+# summary: View queue item in detail
+# full-url: http://host:port/digital-contact-stub/imi/messages/:id
+# responses:
+#   200:
+#     description: view queues
+###
+GET         /messages/:id      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.viewQueueItem(id: String)
+
+###
+# summary: delete queue item
+# full-url: http://host:port/digital-contact-stub/imi/messages/:id
+# responses:
+#   202:
+#     description: delete queue
+###
++nocsrf
+DELETE         /messages/:id      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.deleteQueueItem(id: String)

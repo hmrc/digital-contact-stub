@@ -19,11 +19,12 @@ package uk.gov.hmrc.digitalcontactstub.models.email
 import play.api.libs.json.{Json, OFormat, OWrites}
 
 final case class EmailQueued(
-                        requestTimestamp: String,
-                        messageId: String,
-                        correlationId: String,
-                        status: String
-                      )
+    requestTimestamp: String,
+    messageId: String,
+    correlationId: String,
+    status: String
+)
 object EmailQueued {
- implicit val emailQueuedFormat: OWrites[EmailQueued] = Json.writes[EmailQueued]
+  implicit val emailQueuedFormat: OWrites[EmailQueued] =
+    Json.writes[EmailQueued]
 }

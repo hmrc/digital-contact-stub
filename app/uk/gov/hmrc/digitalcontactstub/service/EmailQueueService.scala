@@ -16,28 +16,36 @@
 
 package uk.gov.hmrc.digitalcontactstub.service
 
-import com.ibm.icu.text.SimpleDateFormat
-import org.joda.time.{DateTimeZone, LocalDate, LocalDateTime}
 import uk.gov.hmrc.digitalcontactstub.models.email.{EmailContent, EmailQueued}
 import uk.gov.hmrc.digitalcontactstub.repositories.EmailQueueRepository
-
-import java.time.format.DateTimeFormatter
-import java.time.temporal.TemporalUnit
-import java.time.{Clock, Instant, ZoneId, ZoneOffset, ZonedDateTime}
-import java.util.{TimeZone, UUID}
+import java.time.LocalDateTime
+import java.util.UUID
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
+import java.time.format.DateTimeFormatter
 
 @Singleton
 class EmailQueueService @Inject()(emailQueueRepository: EmailQueueRepository) {
 
-  private def now = Instant.now()
-  private def uuid = UUID.randomUUID()
-
-  def addToQueue(emailContent: EmailContent)(implicit ec: ExecutionContext): Future[EmailQueued] = {
-
-   emailQueueRepository.save(emailContent).map(_ => EmailQueued(now.toString,uuid.toString, emailContent.to.map(_.correlationId).head, "queued"))
+  private def timeStamp = {
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    LocalDateTime.now().format(formatter)
   }
 
+  def addToQueue(emailContent: EmailContent)(
+      implicit ec: ExecutionContext): Future[EmailQueued] = {
+    for {
+      _ <- emailQueueRepository.save(emailContent)
+      queued = EmailQueued(timeStamp,
+                           UUID.randomUUID().toString,
+                           emailContent.to.map(_.correlationId).head,
+                           "queued")
+    } yield queued
+  }
 
+  def reset: Future[Boolean] = emailQueueRepository.cleanUp
+
+  def getQueue = emailQueueRepository.findAll
+  def getQueueItem(id: String) = emailQueueRepository.findItem(id)
+  def deleteQueueItem(id: String) = emailQueueRepository.deleteItem(id)
 }

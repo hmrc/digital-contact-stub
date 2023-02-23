@@ -19,16 +19,26 @@ package uk.gov.hmrc.digitalcontactstub.filters
 import com.kenshoo.play.metrics.MetricsFilter
 import play.api.http.DefaultHttpFilters
 import play.filters.cors.CORSFilter
-import uk.gov.hmrc.play.bootstrap.filters.{AuditFilter, CacheControlFilter, LoggingFilter, MDCFilter}
+import uk.gov.hmrc.play.bootstrap.filters.{
+  AuditFilter,
+  CacheControlFilter,
+  LoggingFilter,
+  MDCFilter
+}
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
 class MicroserviceFilters @Inject()(
-  metricsFilter: MetricsFilter,
-  auditFilter: AuditFilter,
-  loggingFilter: LoggingFilter,
-  cacheFilter: CacheControlFilter,
-  mdcFilter: MDCFilter,
-  corsFilter: CORSFilter
-) extends DefaultHttpFilters(metricsFilter, auditFilter, loggingFilter, cacheFilter, mdcFilter, corsFilter)
+    metricsFilter: MetricsFilter,
+    auditFilter: AuditFilter,
+    loggingFilter: LoggingFilter,
+    cacheFilter: CacheControlFilter,
+    mdcFilter: MDCFilter,
+    corsFilter: CORSFilter
+) extends DefaultHttpFilters(metricsFilter,
+                               auditFilter,
+                               loggingFilter,
+                               cacheFilter,
+                               mdcFilter,
+                               corsFilter)

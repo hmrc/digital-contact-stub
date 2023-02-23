@@ -19,21 +19,50 @@ package uk.gov.hmrc.digitalcontactstub.controllers
 import play.api.i18n.I18nSupport
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc._
+import uk.gov.hmrc.digitalcontactstub.models.email.EmailContent
+import uk.gov.hmrc.digitalcontactstub.models.email.EmailContent._
 import uk.gov.hmrc.digitalcontactstub.models.email.EmailQueued.emailQueuedFormat
-import uk.gov.hmrc.digitalcontactstub.models.email.{EmailContent, EmailQueued}
 import uk.gov.hmrc.digitalcontactstub.service.EmailQueueService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import EmailContent._
-import javax.inject.Inject
+
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
+import EmailContent.format
+import uk.gov.hmrc.digitalcontactstub.views.html.ViewEmailQueue
 
-class EmailProviderController @Inject()(cc: MessagesControllerComponents, emailQueueService: EmailQueueService
-                                        )(implicit ec: ExecutionContext)
-  extends FrontendController(cc) with I18nSupport {
+@Singleton
+class EmailProviderController @Inject()(
+    cc: MessagesControllerComponents,
+    emailQueueService: EmailQueueService,
+    viewEmailQueue: ViewEmailQueue)(implicit ec: ExecutionContext)
+    extends FrontendController(cc)
+    with I18nSupport {
 
-  def sendEmailToImi: Action[JsValue] = Action.async(parse.json) { implicit request =>
-    withJsonBody[EmailContent]{email =>
-      emailQueueService.addToQueue(email).map(result => Created(Json.toJson(result)))
-    }
+  def sendEmailToImiQueue: Action[JsValue] = Action.async(parse.json) {
+    implicit request =>
+      withJsonBody[EmailContent] { email =>
+        emailQueueService
+          .addToQueue(email)
+          .map(result => Created(Json.toJson(result)))
+      }
   }
+
+  def resetQueue = Action.async { implicit request =>
+    emailQueueService.reset.map(result => Accepted(Json.toJson(result)))
+  }
+
+  def viewQueue = Action.async { implicit request =>
+    emailQueueService.getQueue.map(x => Ok(viewEmailQueue(x)))
+  }
+
+  def viewQueueItem(id: String) = Action.async { implicit request =>
+    emailQueueService.getQueueItem(id).map(x => Ok(Json.toJson(x)))
+  }
+
+  def deleteQueueItem(id: String) = Action.async { implicit request =>
+    emailQueueService
+      .deleteQueueItem(id)
+      .flatMap(_ => emailQueueService.getQueue.map(x => Ok(viewEmailQueue(x))))
+  }
+
 }
