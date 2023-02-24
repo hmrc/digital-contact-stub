@@ -16,12 +16,14 @@
 
 package uk.gov.hmrc.digitalcontactstub.repositories
 
+import org.scalatest.{BeforeAndAfter, BeforeAndAfterEach}
 import org.scalatestplus.play.PlaySpec
 import uk.gov.hmrc.digitalcontactstub.models.email._
 import uk.gov.hmrc.mongo.test.MongoSupport
+
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class EmailQueueRepositorySpec extends PlaySpec with MongoSupport {
+class EmailQueueRepositorySpec extends PlaySpec with MongoSupport with BeforeAndAfterEach {
 
   "save" must {
     "add to email_queue" in new SetUp {
@@ -39,7 +41,6 @@ class EmailQueueRepositorySpec extends PlaySpec with MongoSupport {
 
   "findAll" must {
     "get all documents in collection" in new SetUp {
-      emailQueueRepository.cleanUp.futureValue mustBe true
       emailQueueRepository.save(emailContent).futureValue mustBe true
       emailQueueRepository.save(emailContent).futureValue mustBe true
       emailQueueRepository.collection
@@ -47,15 +48,31 @@ class EmailQueueRepositorySpec extends PlaySpec with MongoSupport {
         .toFuture()
         .futureValue
         .size mustBe 2
-      emailQueueRepository.cleanUp.futureValue mustBe true
+    }
+
+    "findItem" must {
+      "get document in collection that matches collectionId" in new SetUp {
+        emailQueueRepository.save(emailContent).futureValue mustBe true
+
+        val result = emailQueueRepository.findItem("1daa430a-e54e-48f8-9fac-dfc0971b85a5")
+        result.futureValue.head.to.map(_.correlationId).head mustBe "1daa430a-e54e-48f8-9fac-dfc0971b85a5"
+      }
     }
   }
+
+  override def afterEach() = {
+    super.beforeEach()
+    val setup = new SetUp
+    setup.emailQueueRepository.cleanUp.futureValue
+  }
+
+
 
   class SetUp {
     val emailContent = EmailContent(
       Channel.EMAIL,
       "test@gmail.com",
-      List(To(List(("sentto@gmail.com")), "correlationId")),
+      List(To(List(("sentto@gmail.com")), "1daa430a-e54e-48f8-9fac-dfc0971b85a5")),
       "",
       Options(true, false, "name"),
       Content("type", "subject", None, "text", "html")
