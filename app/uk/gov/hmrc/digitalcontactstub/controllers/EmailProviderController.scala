@@ -32,8 +32,7 @@ class EmailProviderController @Inject()(
     cc: MessagesControllerComponents,
     emailQueueService: EmailQueueService,
     viewEmailQueue: ViewEmailQueue)(implicit ec: ExecutionContext)
-    extends FrontendController(cc)
-     {
+    extends FrontendController(cc) {
 
   def sendEmailToImiQueue: Action[JsValue] = Action.async(parse.json) {
     implicit request =>

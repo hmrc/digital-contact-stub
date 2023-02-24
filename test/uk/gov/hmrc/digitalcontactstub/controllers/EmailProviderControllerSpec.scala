@@ -27,7 +27,11 @@ import play.api.test.{FakeRequest, Helpers}
 import uk.gov.hmrc.digitalcontactstub.repositories.EmailQueueRepository
 import uk.gov.hmrc.mongo.test.MongoSupport
 
-class EmailProviderControllerSpec extends PlaySpec with GuiceOneAppPerSuite with BeforeAndAfterEach with MongoSupport {
+class EmailProviderControllerSpec
+    extends PlaySpec
+    with GuiceOneAppPerSuite
+    with BeforeAndAfterEach
+    with MongoSupport {
 
   "POST to /digital-contact-stub/imi/v2/messages" must {
     "return CREATED" in new TestSetUp {
@@ -40,7 +44,7 @@ class EmailProviderControllerSpec extends PlaySpec with GuiceOneAppPerSuite with
   }
 
   "GET to /digital-contact-stub/imi/messages" must {
-    "return Ok" in new TestSetUp{
+    "return Ok" in new TestSetUp {
       val controller = app.injector.instanceOf[EmailProviderController]
       controller.sendEmailToImiQueue(postFakeRequest)
 
@@ -56,14 +60,16 @@ class EmailProviderControllerSpec extends PlaySpec with GuiceOneAppPerSuite with
   "GET to digital-contact-stub/imi/messages/:id" must {
     "return Ok" in new TestSetUp {
       val controller = app.injector.instanceOf[EmailProviderController]
-       controller.sendEmailToImiQueue(postFakeRequest)
+      controller.sendEmailToImiQueue(postFakeRequest)
 
-      val fakeRequest = FakeRequest("GET", "digital-contact-stub/imi/messages/1daa430a-e54e-48f8-9fac-dfc0971b85a5")
+      val fakeRequest = FakeRequest(
+        "GET",
+        "digital-contact-stub/imi/messages/1daa430a-e54e-48f8-9fac-dfc0971b85a5")
 
       val result = controller.viewQueue(fakeRequest)
 
       status(result) mustBe OK
-      contentAsString(result) must include ("senderEmail@gmail.com")
+      contentAsString(result) must include("senderEmail@gmail.com")
     }
   }
 
@@ -73,18 +79,17 @@ class EmailProviderControllerSpec extends PlaySpec with GuiceOneAppPerSuite with
     repository.cleanUp
   }
 
+  class TestSetUp {
+    val payloadString =
+      """{"channel":"email","from":"test@hmrc.com","to":[{"email":["senderEmail@gmail.com"],"correlationId":"1daa430a-e54e-48f8-9fac-dfc0971b85a5"}],"callbackData":"","options":{"trackClicks":true,"trackOpens":true,"fromName":"HMRC"},"content":{"type":"type","subject":"subject","replyTo":{"value":"replayTo@gmail.com"},"text":"text","html":"html"}}"""
 
-class TestSetUp {
-  val payloadString =
-    """{"channel":"email","from":"test@hmrc.com","to":[{"email":["senderEmail@gmail.com"],"correlationId":"1daa430a-e54e-48f8-9fac-dfc0971b85a5"}],"callbackData":"","options":{"trackClicks":true,"trackOpens":true,"fromName":"HMRC"},"content":{"type":"type","subject":"subject","replyTo":{"value":"replayTo@gmail.com"},"text":"text","html":"html"}}"""
+    val payloadJson = Json.parse(payloadString)
 
-  val payloadJson = Json.parse(payloadString)
+    val postFakeRequest: FakeRequest[JsValue] =
+      FakeRequest("POST",
+                  "/digital-contact-stub/imi/v2/messages",
+                  Headers((Helpers.CONTENT_TYPE, "application/json")),
+                  payloadJson)
 
-  val postFakeRequest: FakeRequest[JsValue] =
-    FakeRequest("POST",
-      "/digital-contact-stub/imi/v2/messages",
-      Headers((Helpers.CONTENT_TYPE, "application/json")),
-      payloadJson)
-
-}
+  }
 }
