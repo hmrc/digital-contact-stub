@@ -28,7 +28,7 @@ class HelloWorldController @Inject()(mcc: MessagesControllerComponents,
     extends FrontendController(mcc) {
 
   val helloWorld: Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok("sdfafa"))
+    Future.successful(Ok(helloWorldPage()))
   }
 
 }
