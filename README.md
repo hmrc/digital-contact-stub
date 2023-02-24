@@ -1,7 +1,11 @@
 
 # digital-contact-stub
 
-This is a placeholder README.md for a new repository
+Common stub for all digital-contact related projects
+
+# IMI stub
+All the endpoints for imi are listed under imi.routes
+
 
 ### License
 
