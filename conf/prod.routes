@@ -4,7 +4,6 @@
 
 GET        /admin/metrics             com.kenshoo.play.metrics.MetricsController.metrics
 
-
 ###
 # summary: Send email to IMI for IT tests
 # full-url: http://host:port/v2/messages
