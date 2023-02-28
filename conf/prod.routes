@@ -3,3 +3,14 @@
 ->         /                          health.Routes
 
 GET        /admin/metrics             com.kenshoo.play.metrics.MetricsController.metrics
+
+###
+# summary: Send email to IMI for IT tests
+# full-url: http://host:port/v2/messages
+# responses:
+#   201:
+#     description: this is duplicate route to what we have in imi routes to help with IT tests
+###
+
++nocsrf
+POST         /v2/messages      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.sendEmailToImiQueue

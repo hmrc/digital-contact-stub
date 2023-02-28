@@ -46,7 +46,7 @@ class EmailProviderControllerSpec
   "GET to /digital-contact-stub/imi/messages" must {
     "return Ok" in new TestSetUp {
       val controller = app.injector.instanceOf[EmailProviderController]
-      controller.sendEmailToImiQueue(postFakeRequest)
+      controller.sendEmailToImiQueue(postFakeRequest).futureValue
 
       val fakeRequest = FakeRequest("GET", "/digital-contact-stub/imi/messages")
 
@@ -60,7 +60,7 @@ class EmailProviderControllerSpec
   "GET to digital-contact-stub/imi/messages/:id" must {
     "return Ok" in new TestSetUp {
       val controller = app.injector.instanceOf[EmailProviderController]
-      controller.sendEmailToImiQueue(postFakeRequest)
+      controller.sendEmailToImiQueue(postFakeRequest).futureValue
 
       val fakeRequest = FakeRequest(
         "GET",
