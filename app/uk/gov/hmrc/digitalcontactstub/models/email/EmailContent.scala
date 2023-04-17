@@ -24,7 +24,10 @@ final case class EmailContent(
     to: List[To],
     callbackData: String,
     options: Options,
-    content: Content
+    contactPolicy: ContactPolicy,
+    requestedReceipts: Seq[String],
+    content: Content,
+    notifyUrl: String
 )
 
 final case class EmailAddress(value: String)
@@ -58,6 +61,17 @@ object Options {
 
   implicit val format: OFormat[Options] = Json.format[Options]
 }
+
+final case class ContactPolicy(
+                                contactPolicyGroup: String,
+                                channelCheckConsent: Boolean,
+                                channelApplyFrequencyCap: Boolean
+                              )
+
+object ContactPolicy {
+  implicit val format: OFormat[ContactPolicy] = Json.format[ContactPolicy]
+}
+
 
 object EmailContent {
   implicit val format: OFormat[EmailContent] = Json.format[EmailContent]
