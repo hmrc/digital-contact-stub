@@ -20,12 +20,11 @@ import play.api.libs.json.{Json, Reads, __}
 import play.api.libs.functional.syntax._
 import java.util.UUID
 
-final case class DeliveryInfoNotification(
-                                           deliveryInfo: DeliveryInfo,
-                                           subtId: String,
-                                           transId: UUID,
-                                           callbackData: Map[String, String],
-                                           correlationId: UUID)
+final case class DeliveryInfoNotification(deliveryInfo: DeliveryInfo,
+                                          subtid: String,
+                                          transid: UUID,
+                                          callbackData: String,
+                                          correlationid: UUID)
 
 object DeliveryInfoNotification {
 
@@ -33,7 +32,10 @@ object DeliveryInfoNotification {
     (__ \ "deliveryInfo").read[DeliveryInfo] and
       (__ \ "subtid").read[String] and
       (__ \ "transid").read[UUID] and
-      (__ \ "callbackData").read[String].map(Json.parse(_).as[Map[String, String]]) and
+      (__ \ "callbackData").read[String] and
       (__ \ "correlationid").read[UUID]
-    )(DeliveryInfoNotification.apply _)
+  )(DeliveryInfoNotification.apply _)
+
+  implicit val formatWrites = Json.format[DeliveryInfoNotification]
+
 }

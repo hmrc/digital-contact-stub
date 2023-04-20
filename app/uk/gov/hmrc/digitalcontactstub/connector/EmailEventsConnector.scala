@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.digitalcontactstub.connector
 
-
 import uk.gov.hmrc.digitalcontactstub.models.email.Event
 import uk.gov.hmrc.http.HttpClient
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
@@ -24,11 +23,13 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
-class EmailEventsConnector @Inject()(servicesConfig: ServicesConfig, httpClient: HttpClient)(implicit ec: ExecutionContext) {
+class EmailEventsConnector @Inject()(
+    servicesConfig: ServicesConfig,
+    httpClient: HttpClient)(implicit ec: ExecutionContext) {
 
   def send(event: Event) = {
     val serviceUrl = servicesConfig.baseUrl("api-service")
-    httpClient.doPost(s"$serviceUrl", event).map(_.status)
+    httpClient.doPost(s"$serviceUrl/events", event).map(_.status)
   }
 
 }

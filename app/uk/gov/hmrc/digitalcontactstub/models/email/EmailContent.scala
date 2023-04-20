@@ -63,15 +63,14 @@ object Options {
 }
 
 final case class ContactPolicy(
-                                contactPolicyGroup: String,
-                                channelCheckConsent: Boolean,
-                                channelApplyFrequencyCap: Boolean
-                              )
+    contactPolicyGroup: String,
+    channelCheckConsent: Boolean,
+    channelApplyFrequencyCap: Boolean
+)
 
 object ContactPolicy {
   implicit val format: OFormat[ContactPolicy] = Json.format[ContactPolicy]
 }
-
 
 object EmailContent {
   implicit val format: OFormat[EmailContent] = Json.format[EmailContent]

@@ -96,7 +96,7 @@ class EmailProviderControllerSpec
       FakeRequest("POST",
                   "/digital-contact-stub/imi/v2/messages",
                   Headers((Helpers.CONTENT_TYPE, "application/json")),
-        payload)
+                  payload)
 
   }
 }

@@ -16,20 +16,21 @@
 
 package uk.gov.hmrc.digitalcontactstub.models.email
 
-import play.api.libs.json.{Reads, __}
+import play.api.libs.json.{Json, Reads, __}
 import play.api.libs.functional.syntax._
+
 import java.time.LocalDateTime
 
 case class DeliveryInfo(
-                         timeStamp: LocalDateTime,
-                         description: DeliveryDescription,
-                         code: String,
-                         deliveryChannel: String,
-                         additionalInfo: String,
-                         destination: String,
-                         destinationType: String,
-                         deliveryStatus: DeliveryStatus
-                       )
+    timeStamp: LocalDateTime,
+    Description: DeliveryDescription,
+    code: String,
+    deliveryChannel: String,
+    additionalInfo: String,
+    destination: String,
+    destinationType: String,
+    deliveryStatus: DeliveryStatus
+)
 
 object DeliveryInfo {
 
@@ -42,5 +43,8 @@ object DeliveryInfo {
       (__ \ "destination").read[String] and
       (__ \ "destinationType").read[String] and
       (__ \ "deliveryStatus").read[DeliveryStatus]
-    )(DeliveryInfo.apply _)
+  )(DeliveryInfo.apply _)
+
+  implicit val formatWrites = Json.writes[DeliveryInfo]
+
 }

@@ -22,7 +22,9 @@ import scala.collection.immutable.IndexedSeq
 
 sealed trait DeliveryDescription extends EnumEntry
 
-object DeliveryDescription extends Enum[DeliveryDescription] with PlayEnum[DeliveryDescription] {
+object DeliveryDescription
+    extends Enum[DeliveryDescription]
+    with PlayEnum[DeliveryDescription] {
   override def values: IndexedSeq[DeliveryDescription] = findValues
   case object Submitted extends DeliveryDescription
   case object Read extends DeliveryDescription
