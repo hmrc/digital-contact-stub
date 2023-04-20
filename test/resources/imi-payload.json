@@ -30,7 +30,7 @@
     "text": "text",
     "html": "html"
   },
-  "requestedReceipts": ["submitted", "delivered", "not verified", "invalid", "bounced",
-    "complaint", "read", "failed"],
+  "requestedReceipts": ["submitted", "delivered", "bounced",
+    "complaint", "read"],
   "notifyUrl": "https://webhook.site/8517c49d-519e-4823-9ad9-9886c26e9a15"
 }
