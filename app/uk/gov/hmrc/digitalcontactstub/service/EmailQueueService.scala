@@ -64,7 +64,7 @@ class EmailQueueService @Inject()(
       "",
       UUID.randomUUID(),
       callbackData,
-      UUID.fromString(firstDestination.correlationId),
+      UUID.fromString(firstDestination.correlationId)
     )
 
     val event = Event(deliveryInfoNotification)
