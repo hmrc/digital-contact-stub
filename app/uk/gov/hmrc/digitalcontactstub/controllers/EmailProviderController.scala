@@ -24,7 +24,6 @@ import uk.gov.hmrc.digitalcontactstub.models.email.EmailQueued.emailQueuedFormat
 import uk.gov.hmrc.digitalcontactstub.service.EmailQueueService
 import uk.gov.hmrc.digitalcontactstub.views.html.ViewEmailQueue
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
