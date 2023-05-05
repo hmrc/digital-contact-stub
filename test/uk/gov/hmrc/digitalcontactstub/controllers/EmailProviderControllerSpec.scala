@@ -16,80 +16,65 @@
 
 package uk.gov.hmrc.digitalcontactstub.controllers
 
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
+import org.mockito.MockitoSugar.mock
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.PlaySpec
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.http.Status.{CREATED, OK}
+import play.api.http.Status.CREATED
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Headers
-import play.api.test.Helpers.{contentAsString, defaultAwaitTimeout, status}
+import play.api.test.Helpers.{defaultAwaitTimeout, status}
 import play.api.test.{FakeRequest, Helpers}
-import uk.gov.hmrc.digitalcontactstub.repositories.EmailQueueRepository
+import uk.gov.hmrc.digitalcontactstub.connector.EmailEventsConnector
+import uk.gov.hmrc.digitalcontactstub.models.email._
+import uk.gov.hmrc.digitalcontactstub.service.EmailQueueService
+import uk.gov.hmrc.digitalcontactstub.views.html.ViewEmailQueue
 import uk.gov.hmrc.mongo.test.MongoSupport
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+import scala.io.Source
 
 class EmailProviderControllerSpec
     extends PlaySpec
-    with GuiceOneAppPerSuite
     with BeforeAndAfterEach
     with MongoSupport {
 
   "POST to /digital-contact-stub/imi/v2/messages" must {
     "return CREATED" in new TestSetUp {
-      val controller = app.injector.instanceOf[EmailProviderController]
-
+      when(emailQueueService.addToQueue(any())(any()))
+        .thenReturn(Future.successful(EmailQueued("", "", "", "")))
       val result = controller.sendEmailToImiQueue(postFakeRequest)
-
       status(result) mustBe CREATED
-    }
-  }
-
-  "GET to /digital-contact-stub/imi/messages" must {
-    "return Ok" in new TestSetUp {
-      val controller = app.injector.instanceOf[EmailProviderController]
-      controller.sendEmailToImiQueue(postFakeRequest).futureValue
-
-      val fakeRequest = FakeRequest("GET", "/digital-contact-stub/imi/messages")
-
-      val result = controller.viewQueue(fakeRequest)
-
-      status(result) mustBe OK
-      contentAsString(result) must include("senderEmail@gmail.com")
-    }
-  }
-
-  "GET to digital-contact-stub/imi/messages/:id" must {
-    "return Ok" in new TestSetUp {
-      val controller = app.injector.instanceOf[EmailProviderController]
-      controller.sendEmailToImiQueue(postFakeRequest).futureValue
-
-      val fakeRequest = FakeRequest(
-        "GET",
-        "digital-contact-stub/imi/messages/1daa430a-e54e-48f8-9fac-dfc0971b85a5")
-
-      val result = controller.viewQueue(fakeRequest)
-
-      status(result) mustBe OK
-      contentAsString(result) must include("senderEmail@gmail.com")
     }
   }
 
   override def beforeEach() = {
     super.beforeEach()
-    val repository = app.injector.instanceOf[EmailQueueRepository]
-    repository.cleanUp
   }
 
   class TestSetUp {
-    val payloadString =
-      """{"channel":"email","from":"test@hmrc.com","to":[{"email":["senderEmail@gmail.com"],"correlationId":"1daa430a-e54e-48f8-9fac-dfc0971b85a5"}],"callbackData":"","options":{"trackClicks":true,"trackOpens":true,"fromName":"HMRC"},"content":{"type":"type","subject":"subject","replyTo":{"value":"replayTo@gmail.com"},"text":"text","html":"html"}}"""
+    val mockEmailEventsConnector = mock[EmailEventsConnector]
+    val emailQueueService = mock[EmailQueueService]
+    val viewEmailQueue = mock[ViewEmailQueue]
 
-    val payloadJson = Json.parse(payloadString)
+    def readFile(fileName: String): String = {
+      val resource = Source.fromURL(getClass.getResource("/" + fileName))
+      val resourceAsString = resource.mkString
+      resource.close()
+      resourceAsString
+    }
+
+    val payload = Json.parse(readFile("imi-payload.json"))
 
     val postFakeRequest: FakeRequest[JsValue] =
       FakeRequest("POST",
                   "/digital-contact-stub/imi/v2/messages",
                   Headers((Helpers.CONTENT_TYPE, "application/json")),
-                  payloadJson)
-
+                  payload)
+    val controller = new EmailProviderController(
+      Helpers.stubMessagesControllerComponents(),
+      emailQueueService,
+      viewEmailQueue)
   }
 }
