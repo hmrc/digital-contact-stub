@@ -31,8 +31,9 @@ import uk.gov.hmrc.digitalcontactstub.models.email._
 import uk.gov.hmrc.digitalcontactstub.service.EmailQueueService
 import uk.gov.hmrc.digitalcontactstub.views.html.ViewEmailQueue
 import uk.gov.hmrc.mongo.test.MongoSupport
+
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.io.Source
 
 class EmailProviderControllerSpec
@@ -42,14 +43,14 @@ class EmailProviderControllerSpec
 
   "POST to /digital-contact-stub/imi/v2/messages" must {
     "return CREATED" in new TestSetUp {
-      when(emailQueueService.addToQueue(any())(any()))
+      when(emailQueueService.addToQueue(any[EmailContent])(any[ExecutionContext]))
         .thenReturn(Future.successful(EmailQueued("", "", "", "")))
       val result = controller.sendEmailToImiQueue(postFakeRequest)
       status(result) mustBe CREATED
     }
   }
 
-  override def beforeEach() = {
+  override def beforeEach(): Unit = {
     super.beforeEach()
   }
 

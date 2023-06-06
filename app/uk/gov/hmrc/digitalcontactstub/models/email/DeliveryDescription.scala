@@ -16,9 +16,7 @@
 
 package uk.gov.hmrc.digitalcontactstub.models.email
 
-import enumeratum.{Enum, EnumEntry, PlayEnum, PlayJsonEnum}
-
-import scala.collection.immutable.IndexedSeq
+import enumeratum.{Enum, EnumEntry, PlayEnum}
 
 sealed trait DeliveryDescription extends EnumEntry
 

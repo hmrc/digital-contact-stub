@@ -36,13 +36,14 @@ class EmailQueueRepository @Inject()(mongo: MongoComponent)(
     collection.insertOne(emailContent).toFuture().map(_.wasAcknowledged())
 
   def cleanUp: Future[Boolean] =
-    collection.deleteMany(Filters.empty).toFuture().map(_.wasAcknowledged())
+    collection.deleteMany(Filters.empty()).toFuture().map(_.wasAcknowledged())
 
-  def findAll = collection.find(Filters.empty).toFuture()
-  def findItem(id: String) =
+  def findAll: Future[Seq[EmailContent]] = collection.find(Filters.empty()).toFuture()
+  
+  def findItem(id: String): Future[Seq[EmailContent]] =
     collection.find(Filters.eq("to.correlationId", id)).toFuture()
 
-  def deleteItem(id: String) =
+  def deleteItem(id: String): Future[Boolean] =
     collection
       .deleteOne(Filters.eq("to.correlationId", id))
       .toFuture()

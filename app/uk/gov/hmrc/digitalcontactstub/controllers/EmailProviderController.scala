@@ -25,7 +25,7 @@ import uk.gov.hmrc.digitalcontactstub.service.EmailQueueService
 import uk.gov.hmrc.digitalcontactstub.views.html.ViewEmailQueue
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class EmailProviderController @Inject()(
@@ -43,7 +43,7 @@ class EmailProviderController @Inject()(
       }
   }
 
-  def resetQueue: Action[AnyContent] = Action.async { implicit request =>
+  def resetQueue: Action[AnyContent] = Action.async { _ =>
     emailQueueService.reset.map(result => Accepted(Json.toJson(result)))
   }
 
@@ -52,12 +52,12 @@ class EmailProviderController @Inject()(
   }
 
   def viewQueueItem(id: String): Action[AnyContent] = Action.async {
-    implicit request =>
+    _ =>
       emailQueueService.getQueueItem(id).map(x => Ok(Json.toJson(x)))
   }
 
   def deleteQueueItem(id: String): Action[AnyContent] = Action.async {
-    implicit request =>
+    _ =>
       emailQueueService
         .deleteQueueItem(id)
         .map(_ => Redirect(Call("GET", "/digital-contact-stub/imi/messages")))

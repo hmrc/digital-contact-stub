@@ -20,6 +20,8 @@ import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.PlaySpec
 import uk.gov.hmrc.digitalcontactstub.models.email._
 import uk.gov.hmrc.mongo.test.MongoSupport
+
+import scala.annotation.nowarn
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class EmailQueueRepositorySpec
@@ -65,7 +67,8 @@ class EmailQueueRepositorySpec
     }
   }
 
-  override def afterEach() = {
+  @nowarn("msg=discarded non-Unit value")
+  override def afterEach(): Unit = {
     super.beforeEach()
     val setup = new SetUp
     setup.emailQueueRepository.cleanUp.futureValue

@@ -21,16 +21,9 @@ import org.mockito.Mockito.{times, verify, when}
 import org.mockito.MockitoSugar.mock
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.play.PlaySpec
+import play.api.http.Status.CREATED
 import uk.gov.hmrc.digitalcontactstub.connector.EmailEventsConnector
-import uk.gov.hmrc.digitalcontactstub.models.email.{
-  Channel,
-  ContactPolicy,
-  Content,
-  EmailContent,
-  EmailQueued,
-  Options,
-  To
-}
+import uk.gov.hmrc.digitalcontactstub.models.email.{Channel, ContactPolicy, Content, EmailContent, EmailQueued, Event, Options, To}
 import uk.gov.hmrc.digitalcontactstub.repositories.EmailQueueRepository
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -40,14 +33,14 @@ class EmailQueueServiceSpec extends PlaySpec with ScalaFutures {
 
   "EmailQueueService" should {
     "save email content to repository and send events" in new TestSetup {
-      when(mockEmailQueueRepository.save(any()))
+      when(mockEmailQueueRepository.save(any[EmailContent]))
         .thenReturn(Future.successful(true))
-      when(mockEmailEventsConnector.send(any()))
-        .thenReturn(Future.successful(201))
+      when(mockEmailEventsConnector.send(any[Event]))
+        .thenReturn(Future.successful(CREATED))
 
       emailQueueService.addToQueue(emailContent).futureValue
       verify(mockEmailQueueRepository, times(1)).save(emailContent)
-      verify(mockEmailEventsConnector, times(5)).send(any())
+      verify(mockEmailEventsConnector, times(5)).send(any[Event])
     }
 
     class TestSetup {
