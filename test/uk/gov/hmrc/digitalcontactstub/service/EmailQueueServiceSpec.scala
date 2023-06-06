@@ -23,7 +23,16 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.play.PlaySpec
 import play.api.http.Status.CREATED
 import uk.gov.hmrc.digitalcontactstub.connector.EmailEventsConnector
-import uk.gov.hmrc.digitalcontactstub.models.email.{Channel, ContactPolicy, Content, EmailContent, EmailQueued, Event, Options, To}
+import uk.gov.hmrc.digitalcontactstub.models.email.{
+  Channel,
+  ContactPolicy,
+  Content,
+  EmailContent,
+  EmailQueued,
+  Event,
+  Options,
+  To
+}
 import uk.gov.hmrc.digitalcontactstub.repositories.EmailQueueRepository
 
 import scala.concurrent.ExecutionContext.Implicits.global

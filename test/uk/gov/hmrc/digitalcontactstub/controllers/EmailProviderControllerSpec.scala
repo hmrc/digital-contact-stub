@@ -43,7 +43,8 @@ class EmailProviderControllerSpec
 
   "POST to /digital-contact-stub/imi/v2/messages" must {
     "return CREATED" in new TestSetUp {
-      when(emailQueueService.addToQueue(any[EmailContent])(any[ExecutionContext]))
+      when(
+        emailQueueService.addToQueue(any[EmailContent])(any[ExecutionContext]))
         .thenReturn(Future.successful(EmailQueued("", "", "", "")))
       val result = controller.sendEmailToImiQueue(postFakeRequest)
       status(result) mustBe CREATED

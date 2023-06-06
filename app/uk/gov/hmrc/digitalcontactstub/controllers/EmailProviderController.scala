@@ -51,16 +51,14 @@ class EmailProviderController @Inject()(
     emailQueueService.getQueue.map(x => Ok(viewEmailQueue(x)))
   }
 
-  def viewQueueItem(id: String): Action[AnyContent] = Action.async {
-    _ =>
-      emailQueueService.getQueueItem(id).map(x => Ok(Json.toJson(x)))
+  def viewQueueItem(id: String): Action[AnyContent] = Action.async { _ =>
+    emailQueueService.getQueueItem(id).map(x => Ok(Json.toJson(x)))
   }
 
-  def deleteQueueItem(id: String): Action[AnyContent] = Action.async {
-    _ =>
-      emailQueueService
-        .deleteQueueItem(id)
-        .map(_ => Redirect(Call("GET", "/digital-contact-stub/imi/messages")))
+  def deleteQueueItem(id: String): Action[AnyContent] = Action.async { _ =>
+    emailQueueService
+      .deleteQueueItem(id)
+      .map(_ => Redirect(Call("GET", "/digital-contact-stub/imi/messages")))
   }
 
 }

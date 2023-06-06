@@ -38,8 +38,9 @@ class EmailQueueRepository @Inject()(mongo: MongoComponent)(
   def cleanUp: Future[Boolean] =
     collection.deleteMany(Filters.empty()).toFuture().map(_.wasAcknowledged())
 
-  def findAll: Future[Seq[EmailContent]] = collection.find(Filters.empty()).toFuture()
-  
+  def findAll: Future[Seq[EmailContent]] =
+    collection.find(Filters.empty()).toFuture()
+
   def findItem(id: String): Future[Seq[EmailContent]] =
     collection.find(Filters.eq("to.correlationId", id)).toFuture()
 
