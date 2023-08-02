@@ -33,6 +33,7 @@ import uk.gov.hmrc.digitalcontactstub.models.email.{
 }
 import uk.gov.hmrc.digitalcontactstub.repositories.EmailQueueRepository
 
+import java.util.UUID
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -44,6 +45,8 @@ class EmailQueueServiceSpec extends PlaySpec with ScalaFutures {
         .thenReturn(Future.successful(true))
       when(mockEmailEventsConnector.send(any()))
         .thenReturn(Future.successful(201))
+      when(mockEmailEventsConnector.markSent(any()))
+        .thenReturn(Future.successful(UUID.randomUUID().toString))
 
       emailQueueService.addToQueue(emailContent).futureValue
       verify(mockEmailQueueRepository, times(1)).save(emailContent)
@@ -64,7 +67,7 @@ class EmailQueueServiceSpec extends PlaySpec with ScalaFutures {
         "",
         Options(true, false, "name"),
         ContactPolicy("KMdrUZptSrOQbemFdB7WAQ", true, true),
-        Seq("submitted", "delivered", "bounced", "complaint", "read"),
+        Seq("submitted", "delivered", "bounce", "complaint", "read"),
         Content("type", "subject", None, "text", "html"),
         "https://webhook.site/8517c49d-519e-4823-9ad9-9886c26e9a15"
       )
