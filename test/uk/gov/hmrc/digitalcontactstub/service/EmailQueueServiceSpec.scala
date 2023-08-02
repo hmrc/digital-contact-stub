@@ -41,6 +41,7 @@ class EmailQueueServiceSpec extends PlaySpec with ScalaFutures {
 
       emailQueueService.addToQueue(emailContent).futureValue
       verify(mockEmailQueueRepository, times(1)).save(emailContent)
+      verify(mockEmailEventsConnector, times(1)).markSent(any[String])
       verify(mockEmailEventsConnector, times(5)).send(any[Event])
     }
 
