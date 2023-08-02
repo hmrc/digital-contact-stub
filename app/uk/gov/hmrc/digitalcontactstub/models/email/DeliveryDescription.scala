@@ -31,4 +31,6 @@ object DeliveryDescription
   case object Delivered extends DeliveryDescription
   case object Transient_ContentRejected extends DeliveryDescription
   case object Transient_General extends DeliveryDescription
+  case object Recipient_not_consented extends DeliveryDescription
+  case object Complained extends DeliveryDescription
 }

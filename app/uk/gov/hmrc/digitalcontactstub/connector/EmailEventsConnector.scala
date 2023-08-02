@@ -19,7 +19,6 @@ package uk.gov.hmrc.digitalcontactstub.connector
 import uk.gov.hmrc.digitalcontactstub.models.email.Event
 import uk.gov.hmrc.http.HttpClient
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
@@ -28,8 +27,15 @@ class EmailEventsConnector @Inject()(
     httpClient: HttpClient)(implicit ec: ExecutionContext) {
 
   def send(event: Event) = {
-    val serviceUrl = servicesConfig.baseUrl("api-service")
-    httpClient.doPost(s"$serviceUrl/events", event).map(_.status)
+    val serviceUrl = servicesConfig.baseUrl("email-events")
+    httpClient.doPost(s"$serviceUrl/email-events", event).map(_.status)
+  }
+
+  def markSent(transId: String) = {
+    val serviceUrl = servicesConfig.baseUrl("email")
+    httpClient
+      .doPost(s"$serviceUrl/test-only/email-admin/markSent/$transId", "")
+      .map(_.body)
   }
 
 }
