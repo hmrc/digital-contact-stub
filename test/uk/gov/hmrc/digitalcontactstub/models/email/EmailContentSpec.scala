@@ -17,7 +17,7 @@
 package uk.gov.hmrc.digitalcontactstub.models.email
 
 import org.scalatestplus.play.PlaySpec
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.Json
 import EmailContent.format
 
 class EmailContentSpec extends PlaySpec {

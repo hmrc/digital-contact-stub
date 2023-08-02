@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.digitalcontactstub.models.email
 
-import play.api.libs.json.{Json, OFormat, OWrites}
+import play.api.libs.json.{Json, OWrites}
 
 final case class EmailQueued(
     requestTimestamp: String,

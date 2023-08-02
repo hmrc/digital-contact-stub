@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.digitalcontactstub.models.email
 
-import play.api.libs.json.{Json, OFormat, Reads}
+import play.api.libs.json.{Json, OFormat}
 
 case class Event(deliveryInfoNotification: DeliveryInfoNotification)
 
