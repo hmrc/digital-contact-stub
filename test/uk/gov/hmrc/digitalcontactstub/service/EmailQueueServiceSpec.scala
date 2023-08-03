@@ -21,20 +21,10 @@ import org.mockito.Mockito.{times, verify, when}
 import org.mockito.MockitoSugar.mock
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.play.PlaySpec
-import play.api.http.Status.CREATED
 import uk.gov.hmrc.digitalcontactstub.connector.EmailEventsConnector
-import uk.gov.hmrc.digitalcontactstub.models.email.{
-  Channel,
-  ContactPolicy,
-  Content,
-  EmailContent,
-  EmailQueued,
-  Event,
-  Options,
-  To
-}
+import uk.gov.hmrc.digitalcontactstub.models.email._
 import uk.gov.hmrc.digitalcontactstub.repositories.EmailQueueRepository
-
+import java.util.UUID
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -44,11 +34,14 @@ class EmailQueueServiceSpec extends PlaySpec with ScalaFutures {
     "save email content to repository and send events" in new TestSetup {
       when(mockEmailQueueRepository.save(any[EmailContent]))
         .thenReturn(Future.successful(true))
-      when(mockEmailEventsConnector.send(any[Event]))
-        .thenReturn(Future.successful(CREATED))
+      when(mockEmailEventsConnector.send(any[Event]()))
+        .thenReturn(Future.successful(201))
+      when(mockEmailEventsConnector.markSent(any[String]()))
+        .thenReturn(Future.successful(UUID.randomUUID().toString))
 
       emailQueueService.addToQueue(emailContent).futureValue
       verify(mockEmailQueueRepository, times(1)).save(emailContent)
+      verify(mockEmailEventsConnector, times(1)).markSent(any[String])
       verify(mockEmailEventsConnector, times(5)).send(any[Event])
     }
 
@@ -66,7 +59,7 @@ class EmailQueueServiceSpec extends PlaySpec with ScalaFutures {
         "",
         Options(true, false, "name"),
         ContactPolicy("KMdrUZptSrOQbemFdB7WAQ", true, true),
-        Seq("submitted", "delivered", "bounced", "complaint", "read"),
+        Seq("submitted", "delivered", "bounce", "complaint", "read"),
         Content("type", "subject", None, "text", "html"),
         "https://webhook.site/8517c49d-519e-4823-9ad9-9886c26e9a15"
       )

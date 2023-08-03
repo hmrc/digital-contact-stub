@@ -30,4 +30,8 @@ object DeliveryStatus
   case object Read extends DeliveryStatus
   case object Delivered extends DeliveryStatus
   case object Bounce extends DeliveryStatus
+  case object Failed extends DeliveryStatus
+  case object Not_Verified extends DeliveryStatus
+  case object Invalid extends DeliveryStatus
+  case object Complained extends DeliveryStatus
 }

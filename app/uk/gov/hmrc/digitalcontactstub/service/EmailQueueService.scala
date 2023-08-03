@@ -47,7 +47,8 @@ class EmailQueueService @Inject()(
 
   private def generateEvent(receipt: String,
                             to: List[To],
-                            callbackData: String): Event = {
+                            callbackData: String,
+                            transId: UUID): Event = {
     val firstDestination = to.head
     val deliveryInfo = DeliveryInfo(LocalDateTime.now(),
                                     DeliveryDescription.Submitted,
@@ -61,7 +62,7 @@ class EmailQueueService @Inject()(
     val deliveryInfoNotification = DeliveryInfoNotification(
       deliveryInfo,
       "",
-      UUID.randomUUID(),
+      transId,
       callbackData,
       UUID.fromString(firstDestination.correlationId)
     )
@@ -87,19 +88,39 @@ class EmailQueueService @Inject()(
             deliveryInfo.copy(Description = DeliveryDescription.Delivered,
                               code = "7501",
                               deliveryStatus = DeliveryStatus.Delivered)))
-      case "bounced" =>
+      case "bounce" =>
         event.copy(
           deliveryInfoNotification.copy(
             deliveryInfo.copy(Description =
                                 DeliveryDescription.Transient_General,
                               code = "7501",
                               deliveryStatus = DeliveryStatus.Bounce)))
+      case "failed" =>
+        event.copy(
+          deliveryInfoNotification.copy(
+            deliveryInfo.copy(Description =
+                                DeliveryDescription.Recipient_not_consented,
+                              code = "7501",
+                              deliveryStatus = DeliveryStatus.Failed)))
+
       case "complaint" =>
+        event.copy(
+          deliveryInfoNotification.copy(
+            deliveryInfo.copy(Description = DeliveryDescription.Complained,
+                              code = "7501",
+                              deliveryStatus = DeliveryStatus.Complained)))
+      case "not verified" =>
         event.copy(
           deliveryInfoNotification.copy(
             deliveryInfo.copy(Description = DeliveryDescription.Submitted,
                               code = "7501",
-                              deliveryStatus = DeliveryStatus.Submitted)))
+                              deliveryStatus = DeliveryStatus.Not_Verified)))
+      case "invalid" =>
+        event.copy(
+          deliveryInfoNotification.copy(
+            deliveryInfo.copy(Description = DeliveryDescription.Submitted,
+                              code = "7501",
+                              deliveryStatus = DeliveryStatus.Invalid)))
       case _ => throw new RuntimeException("receipt not recognised")
 
     }
@@ -107,23 +128,27 @@ class EmailQueueService @Inject()(
 
   private def sendEvents(receipts: Seq[String],
                          to: List[To],
-                         callbackData: String) = {
+                         callbackData: String,
+                         transId: UUID) = {
     Future
       .sequence(receipts.map { r =>
-        emailEventsConnector.send(generateEvent(r, to, callbackData))
+        emailEventsConnector.send(generateEvent(r, to, callbackData, transId))
       })
       .map(_ => ())
   }
 
   def addToQueue(emailContent: EmailContent)(
       implicit ec: ExecutionContext): Future[EmailQueued] = {
+    val transId = UUID.randomUUID()
     for {
       _ <- emailQueueRepository.save(emailContent)
+      _ <- emailEventsConnector.markSent(transId.toString)
       _ <- sendEvents(emailContent.requestedReceipts,
                       emailContent.to,
-                      emailContent.callbackData)
+                      emailContent.callbackData,
+                      transId)
       queued = EmailQueued(timeStamp,
-                           UUID.randomUUID().toString,
+                           transId.toString,
                            emailContent.to.map(_.correlationId).head,
                            "queued")
     } yield queued
