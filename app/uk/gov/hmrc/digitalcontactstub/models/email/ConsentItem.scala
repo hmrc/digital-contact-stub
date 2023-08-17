@@ -14,22 +14,16 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.digitalcontactstub.connector
+package uk.gov.hmrc.digitalcontactstub.models.email
 
-import uk.gov.hmrc.http.HttpClient
-import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-import javax.inject.Inject
-import scala.concurrent.ExecutionContext
+import play.api.libs.json.Json
 
-class EmailEventsConnector @Inject()(
-    servicesConfig: ServicesConfig,
-    httpClient: HttpClient)(implicit ec: ExecutionContext) {
+final case class ConsentItem(channel: String,
+                             address: String,
+                             consent: Boolean,
+                             reason: String,
+                             lastUpdated: String)
 
-  def markSent(transId: String) = {
-    val serviceUrl = servicesConfig.baseUrl("email")
-    httpClient
-      .doPost(s"$serviceUrl/test-only/email-admin/markSent/$transId", "")
-      .map(_.body)
-  }
-
+object ConsentItem {
+  implicit val format = Json.format[ConsentItem]
 }

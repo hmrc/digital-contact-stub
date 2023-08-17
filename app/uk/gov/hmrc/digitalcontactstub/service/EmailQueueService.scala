@@ -17,124 +17,21 @@
 package uk.gov.hmrc.digitalcontactstub.service
 
 import uk.gov.hmrc.digitalcontactstub.connector.EmailEventsConnector
-import uk.gov.hmrc.digitalcontactstub.models.email.{
-  DeliveryDescription,
-  DeliveryInfo,
-  DeliveryInfoNotification,
-  DeliveryStatus,
-  EmailContent,
-  EmailQueued,
-  Event,
-  To
-}
+import uk.gov.hmrc.digitalcontactstub.models.email.{EmailContent, EmailQueued}
 import uk.gov.hmrc.digitalcontactstub.repositories.EmailQueueRepository
-
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
-import java.time.format.DateTimeFormatter
 
 @Singleton
-class EmailQueueService @Inject()(
-    emailQueueRepository: EmailQueueRepository,
-    emailEventsConnector: EmailEventsConnector)(implicit ec: ExecutionContext) {
+class EmailQueueService @Inject()(emailQueueRepository: EmailQueueRepository,
+                                  emailEventsConnector: EmailEventsConnector) {
 
   private def timeStamp = {
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     LocalDateTime.now().format(formatter)
-  }
-
-  private def generateEvent(receipt: String,
-                            to: List[To],
-                            callbackData: String,
-                            transId: UUID): Event = {
-    val firstDestination = to.head
-    val deliveryInfo = DeliveryInfo(LocalDateTime.now(),
-                                    DeliveryDescription.Submitted,
-                                    "",
-                                    "email",
-                                    "",
-                                    firstDestination.email.head,
-                                    "email",
-                                    DeliveryStatus.Submitted)
-
-    val deliveryInfoNotification = DeliveryInfoNotification(
-      deliveryInfo,
-      "",
-      transId,
-      callbackData,
-      UUID.fromString(firstDestination.correlationId)
-    )
-
-    val event = Event(deliveryInfoNotification)
-
-    receipt match {
-      case "submitted" =>
-        event.copy(
-          deliveryInfoNotification.copy(
-            deliveryInfo.copy(Description = DeliveryDescription.Submitted,
-                              code = "7501",
-                              deliveryStatus = DeliveryStatus.Submitted)))
-      case "read" =>
-        event.copy(
-          deliveryInfoNotification.copy(
-            deliveryInfo.copy(Description = DeliveryDescription.Read,
-                              code = "7501",
-                              deliveryStatus = DeliveryStatus.Read)))
-      case "delivered" =>
-        event.copy(
-          deliveryInfoNotification.copy(
-            deliveryInfo.copy(Description = DeliveryDescription.Delivered,
-                              code = "7501",
-                              deliveryStatus = DeliveryStatus.Delivered)))
-      case "bounce" =>
-        event.copy(
-          deliveryInfoNotification.copy(
-            deliveryInfo.copy(Description =
-                                DeliveryDescription.Transient_General,
-                              code = "7501",
-                              deliveryStatus = DeliveryStatus.Bounce)))
-      case "failed" =>
-        event.copy(
-          deliveryInfoNotification.copy(
-            deliveryInfo.copy(Description =
-                                DeliveryDescription.Recipient_not_consented,
-                              code = "7501",
-                              deliveryStatus = DeliveryStatus.Failed)))
-
-      case "complaint" =>
-        event.copy(
-          deliveryInfoNotification.copy(
-            deliveryInfo.copy(Description = DeliveryDescription.Complained,
-                              code = "7501",
-                              deliveryStatus = DeliveryStatus.Complained)))
-      case "not verified" =>
-        event.copy(
-          deliveryInfoNotification.copy(
-            deliveryInfo.copy(Description = DeliveryDescription.Submitted,
-                              code = "7501",
-                              deliveryStatus = DeliveryStatus.Not_Verified)))
-      case "invalid" =>
-        event.copy(
-          deliveryInfoNotification.copy(
-            deliveryInfo.copy(Description = DeliveryDescription.Submitted,
-                              code = "7501",
-                              deliveryStatus = DeliveryStatus.Invalid)))
-      case _ => throw new RuntimeException("receipt not recognised")
-
-    }
-  }
-
-  private def sendEvents(receipts: Seq[String],
-                         to: List[To],
-                         callbackData: String,
-                         transId: UUID) = {
-    Future
-      .sequence(receipts.map { r =>
-        emailEventsConnector.send(generateEvent(r, to, callbackData, transId))
-      })
-      .map(_ => ())
   }
 
   def addToQueue(emailContent: EmailContent)(
@@ -143,10 +40,6 @@ class EmailQueueService @Inject()(
     for {
       _ <- emailQueueRepository.save(emailContent)
       _ <- emailEventsConnector.markSent(transId.toString)
-      _ <- sendEvents(emailContent.requestedReceipts,
-                      emailContent.to,
-                      emailContent.callbackData,
-                      transId)
       queued = EmailQueued(timeStamp,
                            transId.toString,
                            emailContent.to.map(_.correlationId).head,
@@ -154,9 +47,11 @@ class EmailQueueService @Inject()(
     } yield queued
   }
 
-  def reset: Future[Boolean] = emailQueueRepository.cleanUp
+  def reset: Future[Boolean] = emailQueueRepository.deleteAll
 
   def getQueue = emailQueueRepository.findAll
   def getQueueItem(id: String) = emailQueueRepository.findItem(id)
+  def getQueueItemByEmail(email: String) =
+    emailQueueRepository.findItemByEmail(email)
   def deleteQueueItem(id: String) = emailQueueRepository.deleteItem(id)
 }

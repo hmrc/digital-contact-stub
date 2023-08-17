@@ -28,7 +28,10 @@ import play.api.test.Helpers.{defaultAwaitTimeout, status}
 import play.api.test.{FakeRequest, Helpers}
 import uk.gov.hmrc.digitalcontactstub.connector.EmailEventsConnector
 import uk.gov.hmrc.digitalcontactstub.models.email._
-import uk.gov.hmrc.digitalcontactstub.service.EmailQueueService
+import uk.gov.hmrc.digitalcontactstub.service.{
+  ConsentQueueService,
+  EmailQueueService
+}
 import uk.gov.hmrc.digitalcontactstub.views.html.ViewEmailQueue
 import uk.gov.hmrc.mongo.test.MongoSupport
 
@@ -58,6 +61,7 @@ class EmailProviderControllerSpec
   class TestSetUp {
     val mockEmailEventsConnector = mock[EmailEventsConnector]
     val emailQueueService = mock[EmailQueueService]
+    val consentQueueService = mock[ConsentQueueService]
     val viewEmailQueue = mock[ViewEmailQueue]
 
     def readFile(fileName: String): String = {
@@ -77,6 +81,7 @@ class EmailProviderControllerSpec
     val controller = new EmailProviderController(
       Helpers.stubMessagesControllerComponents(),
       emailQueueService,
+      consentQueueService,
       viewEmailQueue)
   }
 }

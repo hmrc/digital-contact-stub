@@ -38,7 +38,7 @@ class EmailQueueRepositorySpec
   "cleanUp" must {
     "remove all documents in collection" in new SetUp {
       emailQueueRepository.save(emailContent).futureValue mustBe true
-      emailQueueRepository.cleanUp.futureValue mustBe true
+      emailQueueRepository.deleteAll.futureValue mustBe true
       emailQueueRepository.collection.find().toFuture().futureValue mustBe Nil
     }
   }
@@ -71,7 +71,7 @@ class EmailQueueRepositorySpec
   override def afterEach(): Unit = {
     super.beforeEach()
     val setup = new SetUp
-    setup.emailQueueRepository.cleanUp.futureValue
+    setup.emailQueueRepository.deleteAll.futureValue
   }
 
   class SetUp {
