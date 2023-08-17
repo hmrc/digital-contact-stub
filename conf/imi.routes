@@ -9,6 +9,38 @@
 +nocsrf
 POST         /v2/messages      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.sendEmailToImiQueue
 
+###
+# summary: Save contact policy item
+# full-url: http://host:port/digital-contact-stub/imi/v1/groups/:groupId/members
+# responses:
+#   201:
+#     description: payload accepted and returns true
+###
+
+POST         /v1/groups/:groupId/members      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.saveContactPolicyItem(groupId: String)
+
+
+###
+# summary: Get contact policy item
+# full-url: http://host:port/digital-contact-stub/imi/v1/groups/:groupId/members
+# responses:
+#   200:
+#     description: payload accepted and returns true
+###
+
+GET         /v1/groups/:groupId/members      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.getContactPolicyItem(groupId: String, address: String)
+
+###
+# summary: Reset contact policy item
+# full-url: http://host:port/digital-contact-stub/imi/v1/contactpolicy
+# responses:
+#   200:
+#     description: reset contact policy item
+###
++nocsrf
+DELETE      /v1/contactpolicy      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.resetContactPolicyItem
+
+
 
 ###
 # summary: Remove email queue
@@ -23,12 +55,21 @@ DELETE         /messages      uk.gov.hmrc.digitalcontactstub.controllers.EmailPr
 
 ###
 # summary: View email queue
-# full-url: http://host:port/digital-contact-stub/imi/messages
+# full-url: http://host:port/digital-contact-stub/imi/viewMessages
 # responses:
 #   200:
 #     description: view queues
 ###
-GET         /messages      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.viewQueue
+GET         /viewMessages      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.viewQueue
+
+###
+# summary: Get all queue items
+# full-url: http://host:port/digital-contact-stub/imi/messages
+# responses:
+#   200:
+#     description: get queue
+###
+GET         /messages      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.getQueue
 
 ###
 # summary: View queue item in detail
@@ -40,6 +81,15 @@ GET         /messages      uk.gov.hmrc.digitalcontactstub.controllers.EmailProvi
 GET         /messages/:id      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.viewQueueItem(id: String)
 
 ###
+# summary: Get message by emailId
+# full-url: http://host:port/digital-contact-stub/imi/messages/:email
+# responses:
+#   200:
+#     description: view queues
+###
+GET         /messages/email/:email      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.viewQueueItemByEmail(email: String)
+
+###
 # summary: delete queue item
 # full-url: http://host:port/digital-contact-stub/imi/deletemessages/:id
 # responses:
@@ -47,4 +97,5 @@ GET         /messages/:id      uk.gov.hmrc.digitalcontactstub.controllers.EmailP
 #     description: delete queue
 ###
 +nocsrf
-POST         /deletemessages/:id      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.deleteQueueItem(id: String)
+DELETE         /deletemessages/:id      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.deleteQueueItem(id: String)
+

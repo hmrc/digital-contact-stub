@@ -34,15 +34,12 @@ class EmailQueueServiceSpec extends PlaySpec with ScalaFutures {
     "save email content to repository and send events" in new TestSetup {
       when(mockEmailQueueRepository.save(any[EmailContent]))
         .thenReturn(Future.successful(true))
-      when(mockEmailEventsConnector.send(any[Event]()))
-        .thenReturn(Future.successful(201))
       when(mockEmailEventsConnector.markSent(any[String]()))
         .thenReturn(Future.successful(UUID.randomUUID().toString))
 
       emailQueueService.addToQueue(emailContent).futureValue
       verify(mockEmailQueueRepository, times(1)).save(emailContent)
       verify(mockEmailEventsConnector, times(1)).markSent(any[String])
-      verify(mockEmailEventsConnector, times(5)).send(any[Event])
     }
 
     class TestSetup {

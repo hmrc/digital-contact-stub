@@ -14,3 +14,9 @@ GET        /admin/metrics             com.kenshoo.play.metrics.MetricsController
 
 +nocsrf
 POST         /v2/messages      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.sendEmailToImiQueue
+
++nocsrf
+POST         /v1/groups/:groupId/members      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.saveContactPolicyItem(groupId: String)
+
+GET         /v1/groups/:groupId/members      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.getContactPolicyItem(groupId: String, address: String)
+
