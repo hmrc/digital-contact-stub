@@ -16,7 +16,7 @@ POST         /v2/messages      uk.gov.hmrc.digitalcontactstub.controllers.EmailP
 #   201:
 #     description: payload accepted and returns true
 ###
-
++nocsrf
 POST         /v1/groups/:groupId/members      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.saveContactPolicyItem(groupId: String)
 
 
