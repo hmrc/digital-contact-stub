@@ -22,13 +22,23 @@ POST         /v1/groups/:groupId/members      uk.gov.hmrc.digitalcontactstub.con
 
 ###
 # summary: Get contact policy item
-# full-url: http://host:port/digital-contact-stub/imi/v1/groups/:groupId/members
+# full-url: http://host:port/digital-contact-stub/imi/v1/groups/:groupId/members?address=email@email.com
 # responses:
 #   200:
 #     description: payload accepted and returns true
 ###
 
 GET         /v1/groups/:groupId/members      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.getContactPolicyItem(groupId: String, address: String)
+
+###
+# summary: Delete contact policy item
+# full-url: http://host:port/digital-contact-stub/imi/v1/groups/:groupId/members
+# responses:
+#   200:
+#     description: returns true after successfull delete
+###
+
+DELETE         /v1/groups/:groupId/members      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.deleteContactPolicyItem(groupId: String, address: String)
 
 ###
 # summary: Reset contact policy item

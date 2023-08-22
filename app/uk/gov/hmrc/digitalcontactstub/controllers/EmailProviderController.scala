@@ -82,6 +82,13 @@ class EmailProviderController @Inject()(
       Future.successful(Ok(Json.toJson(items)))
   }
 
+  def deleteContactPolicyItem(groupId: String, address: String) = Action.async {
+    _ =>
+      logger.info(s"Contact policy delete for $groupId and $address")
+      Future.successful(
+        Ok(consentQueueService.remove(address).getOrElse(false).toString))
+  }
+
   def resetContactPolicyItem() = Action.async { _ =>
     consentQueueService.resetQueue()
     Future.successful(Ok("queue cleared"))
