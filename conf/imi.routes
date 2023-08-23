@@ -32,12 +32,12 @@ GET         /v1/groups/:groupId/members      uk.gov.hmrc.digitalcontactstub.cont
 
 ###
 # summary: Delete contact policy item
-# full-url: http://host:port/digital-contact-stub/imi/v1/groups/:groupId/members
+# full-url: http://host:port/digital-contact-stub/imi/v1/groups/:groupId/members?address=email@email.com
 # responses:
 #   200:
 #     description: returns true after successfull delete
 ###
-
++nocsrf
 DELETE         /v1/groups/:groupId/members      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.deleteContactPolicyItem(groupId: String, address: String)
 
 ###
