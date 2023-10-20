@@ -24,18 +24,14 @@ import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.Future
-
-
 @Singleton
-class PayAsYouEarnController  @Inject
-(
-  cc: MessagesControllerComponents
-)
-  extends BackendController(cc)
-  with Logging {
-  
-  def changedOutputPreferences(nino: String): Action[JsValue] = Action.async(parse.json) {
-    implicit request =>
+class PayAsYouEarnController @Inject(
+    cc: MessagesControllerComponents
+) extends BackendController(cc)
+    with Logging {
+
+  def changedOutputPreferences(nino: String): Action[JsValue] =
+    Action.async(parse.json) { implicit request =>
       withJsonBody[PayeOutput] { body =>
         logger.info(s"Received request: [$request] body: [$body]")
 
@@ -46,8 +42,8 @@ class PayAsYouEarnController  @Inject
             case "YY000404" => NotFound
             case "YY000502" => BadGateway
             case "YY000503" => ServiceUnavailable
-            case _          => InternalServerError(
-              """
+            case _ =>
+              InternalServerError("""
                 |Send the corresponding Nino for a response:
                 |case "YY000200" => Ok
                 |case "YY000400" => BadRequest
@@ -60,6 +56,6 @@ class PayAsYouEarnController  @Inject
           }
         }
       }
-  }  
-  
+    }
+
 }
