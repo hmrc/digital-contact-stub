@@ -25,7 +25,7 @@ import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.Future
 @Singleton
-class PayAsYouEarnController @Inject(
+class PayAsYouEarnController @Inject()(
     cc: MessagesControllerComponents
 ) extends BackendController(cc)
     with Logging {
