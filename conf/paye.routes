@@ -1,0 +1,16 @@
+
+
+###
+# summary: Notify paye NPS system of change of optin value for nino
+# full-url: http://host:port//pay-as-you-earn/individuals/:nino/preferences/output
+# responses depend on the value of first 8 chars of the nino: 
+#   YY000200 = 200 Ok
+#   YY000400 = 400 BadRequest
+#   YY000404 = 404 NotFound
+#   YY000502 = 502 BadGateway
+#   YY000503 = 503 ServiceUnavailable
+#   Any other nino will yield 500 InternalServerError
+###
++nocsrf
+POST         /pay-as-you-earn/individuals/:nino/preferences/output uk.gov.hmrc.digitalcontactstub.controllers.PayAsYouEarnController.changedOutputPreferences(nino: String)
+
