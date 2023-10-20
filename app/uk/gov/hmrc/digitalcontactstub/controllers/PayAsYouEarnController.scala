@@ -20,7 +20,7 @@ import play.api.Logging
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, MessagesControllerComponents}
 import uk.gov.hmrc.digitalcontactstub.models.paye.PayeOutput
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.Future
@@ -31,7 +31,7 @@ class PayAsYouEarnController  @Inject
 (
   cc: MessagesControllerComponents
 )
-  extends FrontendController(cc)
+  extends BackendController(cc)
   with Logging {
   
   def changedOutputPreferences(nino: String): Action[JsValue] = Action.async(parse.json) {
