@@ -1,0 +1,3 @@
+
++nocsrf
+GET         /portal/preferences/paye/:nino/verified-email-address     uk.gov.hmrc.digitalcontactstub.controllers.EntityResolverController.verifiedEmailAddress(nino: String)

@@ -1,5 +1,7 @@
 # Add all the application routes to the app.routes file
 ->         /digital-contact-stub      app.Routes
+->         /                          entityResolver.Routes
+->         /send-templated-email      email.Routes
 ->         /                          paye.Routes
 ->         /                          citizenDetails.Routes
 ->         /                          imi.Routes

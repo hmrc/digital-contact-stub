@@ -17,53 +17,36 @@
 package uk.gov.hmrc.digitalcontactstub.controllers
 
 import play.api.Logging
+import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
 import javax.inject.{Inject, Singleton}
-import scala.annotation.unused
 import scala.concurrent.Future
 
 @Singleton
-class CitizenDetailsController @Inject()(
+class EntityResolverController @Inject()(
     cc: MessagesControllerComponents
 ) extends BackendController(cc)
     with Logging {
 
-  val ninos = Map(
-    "AA000003" -> "AA000003B",
-    "CS700100" -> "CS700100A"
-  )
+  private val NinoWithoutSuffix: Int = 8
 
-  def basic(nino: String): Action[AnyContent] = {
+  def verifiedEmailAddress(nino: String): Action[AnyContent] = {
     Action.async {
-      Future.successful(
-        Ok(
-          s"""
-          |{
-          |  "firstName": "firstname",
-          |  "lastName":  "lastname",
-          |  "title":     "Ms",
-          |  "nino":      "${ninos.getOrElse(nino.take(8), nino)}"
-          |}
-          |""".stripMargin
-        )
-      )
+      nino.take(NinoWithoutSuffix) match {
+        case "CS700100" => Future.successful(NotFound)
+        case _ =>
+          val json = Json.parse("""
+                |{
+                | "email": "EXAMPLE@TEST.com"
+                |}
+                |""".stripMargin)
+
+          Future.successful(Ok(json))
+      }
     }
 
   }
-
-  def etag(@unused nino: String): Action[AnyContent] =
-    Action.async {
-      Future.successful(
-        Ok(
-          """
-          |{
-          |  "etag": "1"
-          |}
-          |""".stripMargin
-        )
-      )
-    }
 
 }
