@@ -15,19 +15,20 @@
  *@
 
 @import uk.gov.hmrc.digitalcontactstub.config.AppConfig
-@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcLayout
-@import views.html.helper.CSPNonce
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcStandardPage
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage._
 
 @this(
         appConfig: AppConfig,
-        hmrcLayout: HmrcLayout
+        hmrcStandardPage: HmrcStandardPage
 )
 @(pageTitle: Option[String] = None)(contentBlock: Html)(implicit request: Request[_], messages: Messages)
 
-@hmrcLayout(
-    pageTitle = pageTitle,
-    nonce = CSPNonce.get,
-    isWelshTranslationAvailable = appConfig.welshLanguageSupportEnabled
+@hmrcStandardPage(
+    HmrcStandardPageParams(
+        pageTitle = pageTitle,
+        isWelshTranslationAvailable = appConfig.welshLanguageSupportEnabled
+    )
 )(contentBlock)
 
 @{
