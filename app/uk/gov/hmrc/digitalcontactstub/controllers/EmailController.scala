@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.digitalcontactstub.controllers
 
-
 import play.api.Logging
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
@@ -26,7 +25,8 @@ import scala.concurrent.Future
 
 @Singleton()
 class EmailController @Inject()(cc: ControllerComponents)
-    extends BackendController(cc) with Logging {
+    extends BackendController(cc)
+    with Logging {
 
   def sendTemplatedEmail: Action[AnyContent] = Action.async {
     // Example body
@@ -46,7 +46,7 @@ class EmailController @Inject()(cc: ControllerComponents)
     Future.successful(Accepted)
   }
 
-  def sendEmail(domain: String): Action[AnyContent] = Action.async{
+  def sendEmail(domain: String): Action[AnyContent] = Action.async {
     logger.debug(s"sendEmail called for domain $domain")
     Future.successful(Accepted)
   }
