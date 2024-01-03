@@ -17,8 +17,11 @@
 package uk.gov.hmrc.digitalcontactstub.controllers
 
 import play.api.Logging
+import play.api.libs.json.JsValue
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
+import uk.gov.hmrc.digitalcontactstub.models.email.SendEmailRequest
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
+import uk.gov.hmrc.digitalcontactstub.models.email.SendEmailRequest._
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.Future
@@ -46,9 +49,12 @@ class EmailController @Inject()(cc: ControllerComponents)
     Future.successful(Accepted)
   }
 
-  def sendEmail(domain: String): Action[AnyContent] = Action.async {
-    logger.debug(s"sendEmail called for domain $domain")
-    Future.successful(Accepted)
+  def sendEmail(domain: String): Action[JsValue] = Action.async(parse.json) {
+    implicit request =>
+      withJsonBody[SendEmailRequest] { _ =>
+        logger.debug(s"request received to send email for domain $domain")
+        Future.successful(Accepted)
+      }
   }
 
 }
