@@ -28,9 +28,8 @@ class ConsentQueueService() {
     if (contains.isEmpty)
       queue.addOne(imiConsent).toList
     else {
-      if (queue.remove(contains.get))
-        queue.addOne(imiConsent).toList
-      else queue.toList
+      queue.remove(contains.get): Unit
+      queue.addOne(imiConsent).toList
     }
   }
 
