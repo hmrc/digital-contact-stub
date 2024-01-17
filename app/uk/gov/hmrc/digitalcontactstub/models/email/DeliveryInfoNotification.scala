@@ -37,6 +37,7 @@ object DeliveryInfoNotification {
       (__ \ "correlationid").read[UUID]
   )(DeliveryInfoNotification.apply _)
 
-  implicit val formatWrites: OFormat[DeliveryInfoNotification] = Json.format[DeliveryInfoNotification]
+  implicit val formatWrites: OFormat[DeliveryInfoNotification] =
+    Json.format[DeliveryInfoNotification]
 
 }
