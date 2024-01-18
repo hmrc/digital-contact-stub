@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.digitalcontactstub.models.email
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 final case class ConsentItem(channel: String,
                              address: String,
@@ -25,5 +25,5 @@ final case class ConsentItem(channel: String,
                              lastUpdated: String)
 
 object ConsentItem {
-  implicit val format = Json.format[ConsentItem]
+  implicit val format: OFormat[ConsentItem] = Json.format[ConsentItem]
 }

@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.digitalcontactstub.models.email
 
-import play.api.libs.json.{Json, Reads, __}
+import play.api.libs.json.{Json, OWrites, Reads, __}
 import play.api.libs.functional.syntax._
 
 import java.time.LocalDateTime
@@ -45,6 +45,6 @@ object DeliveryInfo {
       (__ \ "deliveryStatus").read[DeliveryStatus]
   )(DeliveryInfo.apply _)
 
-  implicit val formatWrites = Json.writes[DeliveryInfo]
+  implicit val formatWrites: OWrites[DeliveryInfo] = Json.writes[DeliveryInfo]
 
 }
