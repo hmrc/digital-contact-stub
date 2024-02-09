@@ -17,12 +17,13 @@
 package uk.gov.hmrc.digitalcontactstub.models.email
 
 import play.api.libs.json.{Json, OFormat}
+import java.time.Instant
 
 final case class ConsentItem(channel: String,
                              address: String,
                              consent: Boolean,
                              reason: String,
-                             lastUpdated: String)
+                             lastUpdated: Instant)
 
 object ConsentItem {
   implicit val format: OFormat[ConsentItem] = Json.format[ConsentItem]

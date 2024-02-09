@@ -32,8 +32,8 @@ import uk.gov.hmrc.digitalcontactstub.service.{
 }
 import uk.gov.hmrc.digitalcontactstub.views.html.ViewEmailQueue
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-
-import java.time.LocalDateTime
+import java.time.Instant
+import java.time.temporal.ChronoUnit
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -78,7 +78,7 @@ class EmailProviderController @Inject()(
                         i.address,
                         i.consent,
                         i.reason,
-                        LocalDateTime.now().toString))
+                        Instant.now.truncatedTo(ChronoUnit.MILLIS)))
       Future.successful(Ok(Json.toJson(items)))
   }
 
