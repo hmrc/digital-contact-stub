@@ -21,8 +21,15 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.mvc._
 import uk.gov.hmrc.digitalcontactstub.models.email.EmailContent.format
 import uk.gov.hmrc.digitalcontactstub.models.email.EmailQueued.emailQueuedFormat
-import uk.gov.hmrc.digitalcontactstub.models.email.{ConsentItem, EmailContent, ImiConsent}
-import uk.gov.hmrc.digitalcontactstub.service.{ConsentQueueService, EmailQueueService}
+import uk.gov.hmrc.digitalcontactstub.models.email.{
+  ConsentItem,
+  EmailContent,
+  ImiConsent
+}
+import uk.gov.hmrc.digitalcontactstub.service.{
+  ConsentQueueService,
+  EmailQueueService
+}
 import uk.gov.hmrc.digitalcontactstub.views.html.ViewEmailQueue
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import java.time.Instant
@@ -71,7 +78,7 @@ class EmailProviderController @Inject()(
                         i.address,
                         i.consent,
                         i.reason,
-              Instant.now.truncatedTo(ChronoUnit.MILLIS)))
+                        Instant.now.truncatedTo(ChronoUnit.MILLIS)))
       Future.successful(Ok(Json.toJson(items)))
   }
 
