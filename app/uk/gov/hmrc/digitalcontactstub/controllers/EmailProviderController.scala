@@ -21,19 +21,12 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.mvc._
 import uk.gov.hmrc.digitalcontactstub.models.email.EmailContent.format
 import uk.gov.hmrc.digitalcontactstub.models.email.EmailQueued.emailQueuedFormat
-import uk.gov.hmrc.digitalcontactstub.models.email.{
-  ConsentItem,
-  EmailContent,
-  ImiConsent
-}
-import uk.gov.hmrc.digitalcontactstub.service.{
-  ConsentQueueService,
-  EmailQueueService
-}
+import uk.gov.hmrc.digitalcontactstub.models.email.{ConsentItem, EmailContent, ImiConsent}
+import uk.gov.hmrc.digitalcontactstub.service.{ConsentQueueService, EmailQueueService}
 import uk.gov.hmrc.digitalcontactstub.views.html.ViewEmailQueue
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-
-import java.time.LocalDateTime
+import java.time.Instant
+import java.time.temporal.ChronoUnit
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -78,7 +71,7 @@ class EmailProviderController @Inject()(
                         i.address,
                         i.consent,
                         i.reason,
-                        LocalDateTime.now().toString))
+              Instant.now.truncatedTo(ChronoUnit.MILLIS)))
       Future.successful(Ok(Json.toJson(items)))
   }
 
