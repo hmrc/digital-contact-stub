@@ -66,21 +66,34 @@ class EmailProviderController @Inject()(
       }
     }
 
-  def getContactPolicyItem(groupId: String, address: String) = Action.async {
-    _ =>
+  def getContactPolicyItem(groupId: String,
+                           address: Option[String]): Action[AnyContent] =
+    Action.async { _ =>
       logger.info(s"Contact policy item for $groupId and $address")
-      val items = consentQueueService.queue
-        .find(_.address == address)
-        .toList
-        .map(
-          i =>
-            ConsentItem(i.channel,
-                        i.address,
-                        i.consent,
-                        i.reason,
-                        Instant.now.truncatedTo(ChronoUnit.MILLIS)))
-      Future.successful(Ok(Json.toJson(items)))
-  }
+      val data = address match {
+        case Some(address) =>
+          consentQueueService.queue
+            .find(_.address == address)
+            .toList
+            .map(
+              i =>
+                ConsentItem(i.channel,
+                            i.address,
+                            i.consent,
+                            i.reason,
+                            Instant.now.truncatedTo(ChronoUnit.MILLIS)))
+        case None =>
+          consentQueueService.queue.toList
+            .map(
+              i =>
+                ConsentItem(i.channel,
+                            i.address,
+                            i.consent,
+                            i.reason,
+                            Instant.now.truncatedTo(ChronoUnit.MILLIS)))
+      }
+      Future.successful(Ok(Json.toJson(data)))
+    }
 
   def deleteContactPolicyItem(groupId: String, address: String) = Action.async {
     _ =>

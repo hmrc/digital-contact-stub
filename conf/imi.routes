@@ -28,7 +28,7 @@ POST         /v1/groups/:groupId/members      uk.gov.hmrc.digitalcontactstub.con
 #     description: payload accepted and returns true
 ###
 
-GET         /v1/groups/:groupId/members      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.getContactPolicyItem(groupId: String, address: String)
+GET         /v1/groups/:groupId/members      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.getContactPolicyItem(groupId: String, address: Option[String])
 
 ###
 # summary: Delete contact policy item
