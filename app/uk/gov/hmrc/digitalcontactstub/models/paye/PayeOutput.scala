@@ -16,11 +16,9 @@
 
 package uk.gov.hmrc.digitalcontactstub.models.paye
 
-import play.api.libs.json.{Json, Reads}
+import play.api.libs.json.{ Json, Reads }
 
-case class PayeOutput(formType: String,
-                      outputPreference: String,
-                      bounced: Boolean)
+case class PayeOutput(formType: String, outputPreference: String, bounced: Boolean)
 
 object PayeOutput {
   implicit val reads: Reads[PayeOutput] = Json.reads[PayeOutput]

@@ -22,11 +22,11 @@ import org.mockito.MockitoSugar.mock
 import org.scalatest.concurrent.ScalaFutures.convertScalaFuture
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Writes
-import uk.gov.hmrc.http.{HttpClient, HttpResponse}
+import uk.gov.hmrc.http.{ HttpClient, HttpResponse }
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import java.util.UUID
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 class EmailEventsConnectorSpec extends PlaySpec {
   "markSent" must {
@@ -43,10 +43,11 @@ class EmailEventsConnectorSpec extends PlaySpec {
     val httpClient = mock[HttpClient]
     val transId = UUID.randomUUID().toString
     when(
-      httpClient.doPost[String](
-        any[String],
-        any[String],
-        any[Seq[(String, String)]])(any[Writes[String]], any[ExecutionContext]))
+      httpClient.doPost[String](any[String], any[String], any[Seq[(String, String)]])(
+        any[Writes[String]],
+        any[ExecutionContext]
+      )
+    )
       .thenReturn(Future.successful(HttpResponse(201, transId)))
   }
 }

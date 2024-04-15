@@ -20,12 +20,11 @@ import org.mongodb.scala.model.Filters
 import uk.gov.hmrc.digitalcontactstub.models.email.EmailContent
 import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.{ Inject, Singleton }
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
-class EmailQueueRepository @Inject()(mongo: MongoComponent)(
-    implicit ec: ExecutionContext)
+class EmailQueueRepository @Inject() (mongo: MongoComponent)(implicit ec: ExecutionContext)
     extends PlayMongoRepository[EmailContent](
       mongo,
       "email_queue",

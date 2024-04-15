@@ -24,10 +24,7 @@ import uk.gov.hmrc.mongo.test.MongoSupport
 import scala.annotation.nowarn
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class EmailQueueRepositorySpec
-    extends PlaySpec
-    with MongoSupport
-    with BeforeAndAfterEach {
+class EmailQueueRepositorySpec extends PlaySpec with MongoSupport with BeforeAndAfterEach {
 
   "save" must {
     "add to email_queue" in new SetUp {
@@ -78,19 +75,11 @@ class EmailQueueRepositorySpec
     val emailContent = EmailContent(
       Channel.EMAIL,
       "test@gmail.com",
-      List(
-        To(List(("sentto@gmail.com")), "1daa430a-e54e-48f8-9fac-dfc0971b85a5")),
+      List(To(List("sentto@gmail.com"), "1daa430a-e54e-48f8-9fac-dfc0971b85a5")),
       "",
       Options(true, false, "name"),
       ContactPolicy("KMdrUZptSrOQbemFdB7WAQ", true, true),
-      Seq("submitted",
-          "delivered",
-          "not verified",
-          "invalid",
-          "bounced",
-          "complaint",
-          "read",
-          "failed"),
+      Seq("submitted", "delivered", "not verified", "invalid", "bounced", "complaint", "read", "failed"),
       Content("type", "subject", None, "text", "html"),
       "https://webhook.site/8517c49d-519e-4823-9ad9-9886c26e9a15"
     )

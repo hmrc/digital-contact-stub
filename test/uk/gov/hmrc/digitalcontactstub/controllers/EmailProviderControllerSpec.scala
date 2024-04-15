@@ -22,41 +22,33 @@ import org.mockito.MockitoSugar.mock
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.PlaySpec
 import play.api.http.Status.CREATED
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{ JsValue, Json }
 import play.api.mvc.Headers
-import play.api.test.Helpers.{defaultAwaitTimeout, status}
-import play.api.test.{FakeRequest, Helpers}
+import play.api.test.Helpers.{ defaultAwaitTimeout, status }
+import play.api.test.{ FakeRequest, Helpers }
 import uk.gov.hmrc.digitalcontactstub.connector.EmailEventsConnector
 import uk.gov.hmrc.digitalcontactstub.models.email._
-import uk.gov.hmrc.digitalcontactstub.service.{
-  ConsentQueueService,
-  EmailQueueService
-}
+import uk.gov.hmrc.digitalcontactstub.service.{ ConsentQueueService, EmailQueueService }
 import uk.gov.hmrc.digitalcontactstub.views.html.ViewEmailQueue
 import uk.gov.hmrc.mongo.test.MongoSupport
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 import scala.io.Source
 
-class EmailProviderControllerSpec
-    extends PlaySpec
-    with BeforeAndAfterEach
-    with MongoSupport {
+class EmailProviderControllerSpec extends PlaySpec with BeforeAndAfterEach with MongoSupport {
 
   "POST to /digital-contact-stub/imi/v2/messages" must {
     "return CREATED" in new TestSetUp {
-      when(
-        emailQueueService.addToQueue(any[EmailContent])(any[ExecutionContext]))
+      when(emailQueueService.addToQueue(any[EmailContent])(any[ExecutionContext]))
         .thenReturn(Future.successful(EmailQueued("", "", "", "")))
       val result = controller.sendEmailToImiQueue(postFakeRequest)
       status(result) mustBe CREATED
     }
   }
 
-  override def beforeEach(): Unit = {
+  override def beforeEach(): Unit =
     super.beforeEach()
-  }
 
   class TestSetUp {
     val mockEmailEventsConnector = mock[EmailEventsConnector]
@@ -74,14 +66,17 @@ class EmailProviderControllerSpec
     val payload = Json.parse(readFile("imi-payload.json"))
 
     val postFakeRequest: FakeRequest[JsValue] =
-      FakeRequest("POST",
-                  "/digital-contact-stub/imi/v2/messages",
-                  Headers((Helpers.CONTENT_TYPE, "application/json")),
-                  payload)
+      FakeRequest(
+        "POST",
+        "/digital-contact-stub/imi/v2/messages",
+        Headers((Helpers.CONTENT_TYPE, "application/json")),
+        payload
+      )
     val controller = new EmailProviderController(
       Helpers.stubMessagesControllerComponents(),
       emailQueueService,
       consentQueueService,
-      viewEmailQueue)
+      viewEmailQueue
+    )
   }
 }

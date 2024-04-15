@@ -17,51 +17,48 @@
 package uk.gov.hmrc.digitalcontactstub.controllers
 
 import play.api.Logging
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{ Action, AnyContent, MessagesControllerComponents }
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.{ Inject, Singleton }
 import scala.annotation.unused
 import scala.concurrent.Future
 
 @Singleton
-class CitizenDetailsController @Inject()(
-    cc: MessagesControllerComponents
-) extends BackendController(cc)
-    with Logging {
+class CitizenDetailsController @Inject() (
+  cc: MessagesControllerComponents
+) extends BackendController(cc) with Logging {
 
   val ninos = Map(
     "AA000003" -> "AA000003B",
     "CS700100" -> "CS700100A"
   )
 
-  def basic(nino: String): Action[AnyContent] = {
+  def basic(nino: String): Action[AnyContent] =
     Action.async {
       Future.successful(
         Ok(
           s"""
-          |{
-          |  "firstName": "firstname",
-          |  "lastName":  "lastname",
-          |  "title":     "Ms",
-          |  "nino":      "${ninos.getOrElse(nino.take(8), nino)}"
-          |}
-          |""".stripMargin
+             |{
+             |  "firstName": "firstname",
+             |  "lastName":  "lastname",
+             |  "title":     "Ms",
+             |  "nino":      "${ninos.getOrElse(nino.take(8), nino)}"
+             |}
+             |""".stripMargin
         )
       )
     }
-
-  }
 
   def etag(@unused nino: String): Action[AnyContent] =
     Action.async {
       Future.successful(
         Ok(
           """
-          |{
-          |  "etag": "1"
-          |}
-          |""".stripMargin
+            |{
+            |  "etag": "1"
+            |}
+            |""".stripMargin
         )
       )
     }

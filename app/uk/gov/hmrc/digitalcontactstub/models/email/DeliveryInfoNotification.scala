@@ -16,16 +16,18 @@
 
 package uk.gov.hmrc.digitalcontactstub.models.email
 
-import play.api.libs.json.{Json, OFormat, Reads, __}
+import play.api.libs.json.{ Json, OFormat, Reads, __ }
 import play.api.libs.functional.syntax._
 
 import java.util.UUID
 
-final case class DeliveryInfoNotification(deliveryInfo: DeliveryInfo,
-                                          subtid: String,
-                                          transid: UUID,
-                                          callbackData: String,
-                                          correlationid: UUID)
+final case class DeliveryInfoNotification(
+  deliveryInfo: DeliveryInfo,
+  subtid: String,
+  transid: UUID,
+  callbackData: String,
+  correlationid: UUID
+)
 
 object DeliveryInfoNotification {
 

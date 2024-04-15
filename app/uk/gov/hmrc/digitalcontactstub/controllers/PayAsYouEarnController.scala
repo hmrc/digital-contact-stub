@@ -18,17 +18,16 @@ package uk.gov.hmrc.digitalcontactstub.controllers
 
 import play.api.Logging
 import play.api.libs.json.JsValue
-import play.api.mvc.{Action, MessagesControllerComponents}
+import play.api.mvc.{ Action, MessagesControllerComponents }
 import uk.gov.hmrc.digitalcontactstub.models.paye.PayeOutput
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.{ Inject, Singleton }
 import scala.concurrent.Future
 @Singleton
-class PayAsYouEarnController @Inject()(
-    cc: MessagesControllerComponents
-) extends BackendController(cc)
-    with Logging {
+class PayAsYouEarnController @Inject() (
+  cc: MessagesControllerComponents
+) extends BackendController(cc) with Logging {
 
   def changedOutputPreferences(nino: String): Action[JsValue] =
     Action.async(parse.json) { implicit request =>
@@ -44,15 +43,15 @@ class PayAsYouEarnController @Inject()(
             case "YY000503" => ServiceUnavailable
             case _ =>
               InternalServerError("""
-                |Send the corresponding Nino for a response:
-                |case "YY000200" => Ok
-                |case "YY000400" => BadRequest
-                |case "YY000404" => NotFound
-                |case "YY000500" => InternalServerError
-                |case "YY000502" => BadGateway
-                |case "YY000503" => ServiceUnavailable
-                |case _          => InternalServerError
-                |""".stripMargin)
+                                    |Send the corresponding Nino for a response:
+                                    |case "YY000200" => Ok
+                                    |case "YY000400" => BadRequest
+                                    |case "YY000404" => NotFound
+                                    |case "YY000500" => InternalServerError
+                                    |case "YY000502" => BadGateway
+                                    |case "YY000503" => ServiceUnavailable
+                                    |case _          => InternalServerError
+                                    |""".stripMargin)
           }
         }
       }

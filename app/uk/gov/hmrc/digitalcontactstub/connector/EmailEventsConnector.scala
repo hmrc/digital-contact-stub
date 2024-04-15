@@ -21,9 +21,9 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
-class EmailEventsConnector @Inject()(
-    servicesConfig: ServicesConfig,
-    httpClient: HttpClient)(implicit ec: ExecutionContext) {
+class EmailEventsConnector @Inject() (servicesConfig: ServicesConfig, httpClient: HttpClient)(implicit
+  ec: ExecutionContext
+) {
 
   def markSent(transId: String) = {
     val serviceUrl = servicesConfig.baseUrl("email")

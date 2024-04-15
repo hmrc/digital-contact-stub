@@ -33,12 +33,10 @@ class ConsentQueueService() {
     }
   }
 
-  def remove(email: String): Option[Boolean] = {
+  def remove(email: String): Option[Boolean] =
     queue.find(_.address == email).map(queue.remove)
-  }
 
-  def resetQueue() = {
+  def resetQueue() =
     queue = mutable.LinkedHashSet.empty[ImiConsent]
-  }
 
 }
