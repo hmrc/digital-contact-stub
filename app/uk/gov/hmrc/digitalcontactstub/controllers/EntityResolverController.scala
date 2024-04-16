@@ -18,35 +18,32 @@ package uk.gov.hmrc.digitalcontactstub.controllers
 
 import play.api.Logging
 import play.api.libs.json.Json
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{ Action, AnyContent, MessagesControllerComponents }
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.{ Inject, Singleton }
 import scala.concurrent.Future
 
 @Singleton
-class EntityResolverController @Inject()(
-    cc: MessagesControllerComponents
-) extends BackendController(cc)
-    with Logging {
+class EntityResolverController @Inject() (
+  cc: MessagesControllerComponents
+) extends BackendController(cc) with Logging {
 
   private val NinoWithoutSuffix: Int = 8
 
-  def verifiedEmailAddress(nino: String): Action[AnyContent] = {
+  def verifiedEmailAddress(nino: String): Action[AnyContent] =
     Action.async {
       nino.take(NinoWithoutSuffix) match {
         case "CS700100" => Future.successful(NotFound)
         case _ =>
           val json = Json.parse("""
-                |{
-                | "email": "EXAMPLE@TEST.com"
-                |}
-                |""".stripMargin)
+                                  |{
+                                  | "email": "EXAMPLE@TEST.com"
+                                  |}
+                                  |""".stripMargin)
 
           Future.successful(Ok(json))
       }
     }
-
-  }
 
 }

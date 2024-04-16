@@ -16,13 +16,11 @@
 
 package uk.gov.hmrc.digitalcontactstub.models.email
 
-import enumeratum.{Enum, EnumEntry, PlayEnum}
+import enumeratum.{ Enum, EnumEntry, PlayEnum }
 
 sealed trait DeliveryDescription extends EnumEntry
 
-object DeliveryDescription
-    extends Enum[DeliveryDescription]
-    with PlayEnum[DeliveryDescription] {
+object DeliveryDescription extends Enum[DeliveryDescription] with PlayEnum[DeliveryDescription] {
   override def values: IndexedSeq[DeliveryDescription] = findValues
   case object Submitted extends DeliveryDescription
   case object Read extends DeliveryDescription

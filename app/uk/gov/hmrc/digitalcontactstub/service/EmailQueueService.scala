@@ -17,33 +17,31 @@
 package uk.gov.hmrc.digitalcontactstub.service
 
 import uk.gov.hmrc.digitalcontactstub.connector.EmailEventsConnector
-import uk.gov.hmrc.digitalcontactstub.models.email.{EmailContent, EmailQueued}
+import uk.gov.hmrc.digitalcontactstub.models.email.{ EmailContent, EmailQueued }
 import uk.gov.hmrc.digitalcontactstub.repositories.EmailQueueRepository
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.UUID
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.{ Inject, Singleton }
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
-class EmailQueueService @Inject()(emailQueueRepository: EmailQueueRepository,
-                                  emailEventsConnector: EmailEventsConnector) {
+class EmailQueueService @Inject() (
+  emailQueueRepository: EmailQueueRepository,
+  emailEventsConnector: EmailEventsConnector
+) {
 
   private def timeStamp = {
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     LocalDateTime.now().format(formatter)
   }
 
-  def addToQueue(emailContent: EmailContent)(
-      implicit ec: ExecutionContext): Future[EmailQueued] = {
+  def addToQueue(emailContent: EmailContent)(implicit ec: ExecutionContext): Future[EmailQueued] = {
     val transId = UUID.randomUUID()
     for {
       _ <- emailQueueRepository.save(emailContent)
       _ <- emailEventsConnector.markSent(transId.toString)
-      queued = EmailQueued(timeStamp,
-                           transId.toString,
-                           emailContent.to.map(_.correlationId).head,
-                           "queued")
+      queued = EmailQueued(timeStamp, transId.toString, emailContent.to.map(_.correlationId).head, "queued")
     } yield queued
   }
 

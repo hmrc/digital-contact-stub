@@ -16,20 +16,20 @@
 
 package uk.gov.hmrc.digitalcontactstub.models.email
 
-import play.api.libs.json.{Json, OWrites, Reads, __}
+import play.api.libs.json.{ Json, OWrites, Reads, __ }
 import play.api.libs.functional.syntax._
 
 import java.time.LocalDateTime
 
 case class DeliveryInfo(
-    timeStamp: LocalDateTime,
-    Description: DeliveryDescription,
-    code: String,
-    deliveryChannel: String,
-    additionalInfo: String,
-    destination: String,
-    destinationType: String,
-    deliveryStatus: DeliveryStatus
+  timeStamp: LocalDateTime,
+  Description: DeliveryDescription,
+  code: String,
+  deliveryChannel: String,
+  additionalInfo: String,
+  destination: String,
+  destinationType: String,
+  deliveryStatus: DeliveryStatus
 )
 
 object DeliveryInfo {

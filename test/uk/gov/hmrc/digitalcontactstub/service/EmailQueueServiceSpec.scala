@@ -17,7 +17,7 @@
 package uk.gov.hmrc.digitalcontactstub.service
 
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.{times, verify, when}
+import org.mockito.Mockito.{ times, verify, when }
 import org.mockito.MockitoSugar.mock
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.play.PlaySpec
@@ -50,9 +50,7 @@ class EmailQueueServiceSpec extends PlaySpec with ScalaFutures {
       val emailContent = EmailContent(
         Channel.EMAIL,
         "test@gmail.com",
-        List(
-          To(List(("sentto@gmail.com")),
-             "1daa430a-e54e-48f8-9fac-dfc0971b85a5")),
+        List(To(List("sentto@gmail.com"), "1daa430a-e54e-48f8-9fac-dfc0971b85a5")),
         "",
         Options(true, false, "name"),
         ContactPolicy("KMdrUZptSrOQbemFdB7WAQ", true, true),
@@ -63,8 +61,7 @@ class EmailQueueServiceSpec extends PlaySpec with ScalaFutures {
 
       val emailQueued =
         EmailQueued("2023-05-06T08:30:00.000Z", "2", "correlation-id", "queued")
-      val emailQueueService = new EmailQueueService(mockEmailQueueRepository,
-                                                    mockEmailEventsConnector)
+      val emailQueueService = new EmailQueueService(mockEmailQueueRepository, mockEmailEventsConnector)
     }
   }
 }

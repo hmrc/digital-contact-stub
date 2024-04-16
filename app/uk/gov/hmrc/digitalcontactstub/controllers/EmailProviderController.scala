@@ -17,42 +17,34 @@
 package uk.gov.hmrc.digitalcontactstub.controllers
 
 import play.api.Logging
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{ JsValue, Json }
 import play.api.mvc._
 import uk.gov.hmrc.digitalcontactstub.models.email.EmailContent.format
 import uk.gov.hmrc.digitalcontactstub.models.email.EmailQueued.emailQueuedFormat
-import uk.gov.hmrc.digitalcontactstub.models.email.{
-  ConsentItem,
-  EmailContent,
-  ImiConsent
-}
-import uk.gov.hmrc.digitalcontactstub.service.{
-  ConsentQueueService,
-  EmailQueueService
-}
+import uk.gov.hmrc.digitalcontactstub.models.email.{ ConsentItem, EmailContent, ImiConsent }
+import uk.gov.hmrc.digitalcontactstub.service.{ ConsentQueueService, EmailQueueService }
 import uk.gov.hmrc.digitalcontactstub.views.html.ViewEmailQueue
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import java.time.Instant
 import java.time.temporal.ChronoUnit
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.{ Inject, Singleton }
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
-class EmailProviderController @Inject()(
-    cc: MessagesControllerComponents,
-    emailQueueService: EmailQueueService,
-    consentQueueService: ConsentQueueService,
-    viewEmailQueue: ViewEmailQueue)(implicit ec: ExecutionContext)
-    extends FrontendController(cc)
-    with Logging {
+class EmailProviderController @Inject() (
+  cc: MessagesControllerComponents,
+  emailQueueService: EmailQueueService,
+  consentQueueService: ConsentQueueService,
+  viewEmailQueue: ViewEmailQueue
+)(implicit ec: ExecutionContext)
+    extends FrontendController(cc) with Logging {
 
-  def sendEmailToImiQueue: Action[JsValue] = Action.async(parse.json) {
-    implicit request =>
-      withJsonBody[EmailContent] { email =>
-        emailQueueService
-          .addToQueue(email)
-          .map(result => Created(Json.toJson(result)))
-      }
+  def sendEmailToImiQueue: Action[JsValue] = Action.async(parse.json) { implicit request =>
+    withJsonBody[EmailContent] { email =>
+      emailQueueService
+        .addToQueue(email)
+        .map(result => Created(Json.toJson(result)))
+    }
   }
 
   def saveContactPolicyItem(groupId: String): Action[JsValue] =
@@ -66,8 +58,7 @@ class EmailProviderController @Inject()(
       }
     }
 
-  def getContactPolicyItem(groupId: String,
-                           address: Option[String]): Action[AnyContent] =
+  def getContactPolicyItem(groupId: String, address: Option[String]): Action[AnyContent] =
     Action.async { _ =>
       logger.info(s"Contact policy item for $groupId and $address")
       val data = address match {
@@ -75,31 +66,21 @@ class EmailProviderController @Inject()(
           consentQueueService.queue
             .find(_.address == address)
             .toList
-            .map(
-              i =>
-                ConsentItem(i.channel,
-                            i.address,
-                            i.consent,
-                            i.reason,
-                            Instant.now.truncatedTo(ChronoUnit.MILLIS)))
+            .map(i =>
+              ConsentItem(i.channel, i.address, i.consent, i.reason, Instant.now.truncatedTo(ChronoUnit.MILLIS))
+            )
         case None =>
           consentQueueService.queue.toList
-            .map(
-              i =>
-                ConsentItem(i.channel,
-                            i.address,
-                            i.consent,
-                            i.reason,
-                            Instant.now.truncatedTo(ChronoUnit.MILLIS)))
+            .map(i =>
+              ConsentItem(i.channel, i.address, i.consent, i.reason, Instant.now.truncatedTo(ChronoUnit.MILLIS))
+            )
       }
       Future.successful(Ok(Json.toJson(data)))
     }
 
-  def deleteContactPolicyItem(groupId: String, address: String) = Action.async {
-    _ =>
-      logger.info(s"Contact policy delete for $groupId and $address")
-      Future.successful(
-        Ok(consentQueueService.remove(address).getOrElse(false).toString))
+  def deleteContactPolicyItem(groupId: String, address: String) = Action.async { _ =>
+    logger.info(s"Contact policy delete for $groupId and $address")
+    Future.successful(Ok(consentQueueService.remove(address).getOrElse(false).toString))
   }
 
   def resetContactPolicyItem() = Action.async { _ =>
@@ -123,9 +104,8 @@ class EmailProviderController @Inject()(
     emailQueueService.getQueueItem(id).map(x => Ok(Json.toJson(x)))
   }
 
-  def viewQueueItemByEmail(email: String): Action[AnyContent] = Action.async {
-    _ =>
-      emailQueueService.getQueueItemByEmail(email).map(x => Ok(Json.toJson(x)))
+  def viewQueueItemByEmail(email: String): Action[AnyContent] = Action.async { _ =>
+    emailQueueService.getQueueItemByEmail(email).map(x => Ok(Json.toJson(x)))
   }
 
   def deleteQueueItem(id: String): Action[AnyContent] = Action.async { _ =>

@@ -30,19 +30,8 @@ class EmailContentSpec extends PlaySpec {
         "",
         Options(true, true, "HMRC"),
         ContactPolicy("KMdrUZptSrOQbemFdB7WAQ", true, true),
-        Seq("submitted",
-            "delivered",
-            "not verified",
-            "invalid",
-            "bounced",
-            "complaint",
-            "read",
-            "failed"),
-        Content("type",
-                "subject",
-                Some(EmailAddress("replayTo@gmail.com")),
-                "text",
-                "html"),
+        Seq("submitted", "delivered", "not verified", "invalid", "bounced", "complaint", "read", "failed"),
+        Content("type", "subject", Some(EmailAddress("replayTo@gmail.com")), "text", "html"),
         "https://webhook.site/8517c49d-519e-4823-9ad9-9886c26e9a15"
       )
       val jsonContent = Json.toJson(emailContent)

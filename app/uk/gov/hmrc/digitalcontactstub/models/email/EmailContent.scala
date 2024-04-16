@@ -16,18 +16,18 @@
 
 package uk.gov.hmrc.digitalcontactstub.models.email
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.{ Json, OFormat }
 
 final case class EmailContent(
-    channel: String,
-    from: String,
-    to: List[To],
-    callbackData: String,
-    options: Options,
-    contactPolicy: ContactPolicy,
-    requestedReceipts: Seq[String],
-    content: Content,
-    notifyUrl: String
+  channel: String,
+  from: String,
+  to: List[To],
+  callbackData: String,
+  options: Options,
+  contactPolicy: ContactPolicy,
+  requestedReceipts: Seq[String],
+  content: Content,
+  notifyUrl: String
 )
 
 final case class EmailAddress(value: String)
@@ -42,20 +42,14 @@ object To {
 
 }
 
-final case class Content(`type`: String,
-                         subject: String,
-                         replyTo: Option[EmailAddress],
-                         text: String,
-                         html: String)
+final case class Content(`type`: String, subject: String, replyTo: Option[EmailAddress], text: String, html: String)
 
 object Content {
 
   implicit val format: OFormat[Content] = Json.format[Content]
 }
 
-final case class Options(trackClicks: Boolean,
-                         trackOpens: Boolean,
-                         fromName: String)
+final case class Options(trackClicks: Boolean, trackOpens: Boolean, fromName: String)
 
 object Options {
 
@@ -63,9 +57,9 @@ object Options {
 }
 
 final case class ContactPolicy(
-    contactPolicyGroup: String,
-    channelCheckConsent: Boolean,
-    channelApplyFrequencyCap: Boolean
+  contactPolicyGroup: String,
+  channelCheckConsent: Boolean,
+  channelApplyFrequencyCap: Boolean
 )
 
 object ContactPolicy {

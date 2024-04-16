@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2023 HM Revenue & Customs
  *
@@ -32,3 +33,7 @@ lazy val microservice = Project("digital-contact-stub", file("."))
   )
   .settings(resolvers += Resolver.jcenterRepo)
   .settings(CodeCoverageSettings.settings: _*)
+
+Test / test := (Test / test)
+  .dependsOn(scalafmtCheckAll)
+  .value

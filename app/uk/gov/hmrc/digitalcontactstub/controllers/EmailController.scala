@@ -18,18 +18,16 @@ package uk.gov.hmrc.digitalcontactstub.controllers
 
 import play.api.Logging
 import play.api.libs.json.JsValue
-import play.api.mvc.{Action, AnyContent, ControllerComponents}
+import play.api.mvc.{ Action, AnyContent, ControllerComponents }
 import uk.gov.hmrc.digitalcontactstub.models.email.SendEmailRequest
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import uk.gov.hmrc.digitalcontactstub.models.email.SendEmailRequest._
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.{ Inject, Singleton }
 import scala.concurrent.Future
 
 @Singleton()
-class EmailController @Inject()(cc: ControllerComponents)
-    extends BackendController(cc)
-    with Logging {
+class EmailController @Inject() (cc: ControllerComponents) extends BackendController(cc) with Logging {
 
   def sendTemplatedEmail: Action[AnyContent] = Action.async {
     // Example body
@@ -43,18 +41,17 @@ class EmailController @Inject()(cc: ControllerComponents)
     //  "force": false,
     //  "eventUrl": "http://some.other/url",
     //  "onSendUrl": "http://some/send/check/url"
-    //}
+    // }
     // Responds with 202 status if the request is valid and has been queued for sending.
 
     Future.successful(Accepted)
   }
 
-  def sendEmail(domain: String): Action[JsValue] = Action.async(parse.json) {
-    implicit request =>
-      withJsonBody[SendEmailRequest] { _ =>
-        logger.debug(s"request received to send email for domain $domain")
-        Future.successful(Accepted)
-      }
+  def sendEmail(domain: String): Action[JsValue] = Action.async(parse.json) { implicit request =>
+    withJsonBody[SendEmailRequest] { _ =>
+      logger.debug(s"request received to send email for domain $domain")
+      Future.successful(Accepted)
+    }
   }
 
 }
