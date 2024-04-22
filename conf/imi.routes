@@ -10,6 +10,39 @@
 POST         /v2/messages      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.sendEmailToImiQueue
 
 ###
+# summary: View email queue
+# full-url: http://host:port/digital-contact-stub/imi/viewMessages
+# responses:
+#   200:
+#     description: same as imi/messages but items displayed in a nice tabular format
+###
+GET         /viewMessages      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.viewQueue
+
+
+###
+# summary: Get all queue items
+# full-url: http://host:port/digital-contact-stub/imi/messages
+# responses:
+#   200:
+#     description: View in raw json format
+###
+GET         /messages      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.getQueue
+
+
+###
+# summary: Remove email queue
+# full-url: http://host:port/digital-contact-stub/imi/reset
+# responses:
+#   202:
+#     description: queue reset, this will delete all queue items
+###
++nocsrf
+GET        /reset      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.resetQueue
+
+
+
+
+###
 # summary: Save contact policy item
 # full-url: http://host:port/digital-contact-stub/imi/v1/groups/:groupId/members
 # responses:
@@ -51,35 +84,6 @@ DELETE         /v1/groups/:groupId/members      uk.gov.hmrc.digitalcontactstub.c
 DELETE      /v1/contactpolicy      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.resetContactPolicyItem
 
 
-
-###
-# summary: Remove email queue
-# full-url: http://host:port/digital-contact-stub/imi/messages
-# responses:
-#   202:
-#     description: queue reset
-###
-+nocsrf
-DELETE         /messages      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.resetQueue
-
-
-###
-# summary: View email queue
-# full-url: http://host:port/digital-contact-stub/imi/viewMessages
-# responses:
-#   200:
-#     description: view queues
-###
-GET         /viewMessages      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.viewQueue
-
-###
-# summary: Get all queue items
-# full-url: http://host:port/digital-contact-stub/imi/messages
-# responses:
-#   200:
-#     description: get queue
-###
-GET         /messages      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.getQueue
 
 ###
 # summary: View queue item in detail
