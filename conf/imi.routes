@@ -14,7 +14,7 @@ POST         /v2/messages      uk.gov.hmrc.digitalcontactstub.controllers.EmailP
 # full-url: http://host:port/digital-contact-stub/imi/viewMessages
 # responses:
 #   200:
-#     description: displays only 30 items in a  tabular format. we can use reset endpoint view new results
+#     description: displays only 30 items in a  tabular format. we can use reset endpoint to view new results
 ###
 GET         /viewMessages      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.viewQueue
 
