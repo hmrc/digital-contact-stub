@@ -1,0 +1,18 @@
+###
+# summary: View email queue
+# full-url: http://host:port/digital-contact-stub/mailgun/viewMessages
+# responses:
+#   200:
+#     description: displays only 30 items in a  tabular format. we can use reset endpoint to view new results
+###
+GET         /viewMessages      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.viewQueue
+
+###
+# summary: Remove email queue
+# full-url: http://host:port/digital-contact-stub/mailgun/reset
+# responses:
+#   202:
+#     description: queue reset, this will delete all queue items
+###
++nocsrf
+GET        /reset      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.resetQueue
