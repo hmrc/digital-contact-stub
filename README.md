@@ -8,7 +8,7 @@ All the endpoints for imi are listed under imi.routes
 
 ## Endpoints
 
-### Send emails
+### Send emails using imi
 
 ```http
 POST http://localhost8185/v2/messages
@@ -41,6 +41,20 @@ GET http://localhost:8185/digital-contact-stub/imi/reset
 
 ```
 
+### using mailgun for example fset service
+
+### View sent queue
+```http
+GET http://localhost:8185/digital-contact-stub/mailgun/viewMessages
+
+```
+
+
+### reset queue
+```http
+GET http://localhost:8185/digital-contact-stub/mailgun/reset
+
+```
 
 ### License
 
