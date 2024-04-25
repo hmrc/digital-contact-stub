@@ -5,4 +5,5 @@
 ->         /                          paye.Routes
 ->         /                          citizenDetails.Routes
 ->         /                          imi.Routes
+->         /mailgun                          mailgun.Routes
 ->         /                          health.Routes
