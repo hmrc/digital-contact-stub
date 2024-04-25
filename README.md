@@ -30,14 +30,14 @@ Content-Type: application/json
 
 ### View sent queue
 ```http
-GET http://localhost:8185/digital-contact-stub/imi/viewMessages
+GET http://localhost:8185/digital-contact-stub/viewMessages
 
 ```
 
 
 ### reset queue
 ```http
-GET http://localhost:8185/digital-contact-stub/imi/reset
+GET http://localhost:8185/digital-contact-stub/reset
 
 ```
 
