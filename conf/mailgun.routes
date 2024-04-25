@@ -8,6 +8,17 @@
 GET         /viewMessages      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.viewQueue
 
 ###
+# summary: Get all queue items
+# full-url: http://host:port/digital-contact-stub/mailgun/messages
+# responses:
+#   200:
+#     description: View only 30 items in raw json format, we can use reset to see new results
+###
+GET         /messages      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.getMailgunQueue
+
+
+
+###
 # summary: Remove email queue
 # full-url: http://host:port/digital-contact-stub/mailgun/reset
 # responses:

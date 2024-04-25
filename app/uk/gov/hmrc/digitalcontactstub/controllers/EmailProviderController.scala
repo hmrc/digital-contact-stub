@@ -21,10 +21,11 @@ import play.api.libs.json.{ JsValue, Json }
 import play.api.mvc._
 import uk.gov.hmrc.digitalcontactstub.models.email.EmailContent.format
 import uk.gov.hmrc.digitalcontactstub.models.email.EmailQueued.emailQueuedFormat
-import uk.gov.hmrc.digitalcontactstub.models.email.{ ConsentItem, EmailContent, ImiConsent }
+import uk.gov.hmrc.digitalcontactstub.models.email.{ ConsentItem, EmailContent, ImiConsent, MailgunResponse }
 import uk.gov.hmrc.digitalcontactstub.service.{ ConsentQueueService, EmailQueueService }
 import uk.gov.hmrc.digitalcontactstub.views.html.ViewEmailQueue
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import javax.inject.{ Inject, Singleton }
@@ -98,6 +99,24 @@ class EmailProviderController @Inject() (
 
   def getQueue: Action[AnyContent] = Action.async { _ =>
     emailQueueService.getQueue.map(x => Ok(Json.toJson(x)))
+  }
+
+  def getMailgunQueue: Action[AnyContent] = Action.async { _ =>
+    emailQueueService.getQueue.map { queue =>
+      val res = Json.toJson(queue.map { item =>
+        MailgunResponse(
+          from = item.from,
+          to = item.to.headOption.flatMap(_.email.headOption).getOrElse(""),
+          subject = item.content.subject,
+          text = item.content.text,
+          html = item.content.html,
+          date = "",
+          tags = List(item.callbackData),
+          openTracking = item.options.trackOpens.toString
+        )
+      })
+      Ok(res)
+    }
   }
 
   def viewQueueItem(id: String): Action[AnyContent] = Action.async { _ =>
