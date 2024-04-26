@@ -1,11 +1,13 @@
 ###
-# summary: View email queue
-# full-url: http://host:port/digital-contact-stub/mailgun/viewMessages
+# summary: Send email to IMI
+# full-url: http://host:port/digital-contact-stub/v2/messages
 # responses:
-#   200:
-#     description: displays only 30 items in a  tabular format. we can use reset endpoint to view new results
+#   201:
+#     description: payload accepted and returns queued item
 ###
-GET         /viewMessages      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.viewQueue
+
++nocsrf
+POST        /:version/:domain/messages      uk.gov.hmrc.digitalcontactstub.controllers.MailgunMessageController.sendEmailToMailgunQueue(version: String, domain: uk.gov.hmrc.digitalcontactstub.mailgun.model.ValidatedDomain)
 
 ###
 # summary: Get all queue items
@@ -14,7 +16,7 @@ GET         /viewMessages      uk.gov.hmrc.digitalcontactstub.controllers.EmailP
 #   200:
 #     description: View only 30 items in raw json format, we can use reset to see new results
 ###
-GET         /messages      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.getMailgunQueue
+GET         /mailgun/messages      uk.gov.hmrc.digitalcontactstub.controllers.MailgunMessageController.getMailgunQueue(domain: String = "exampleDomain")
 
 
 
@@ -26,4 +28,4 @@ GET         /messages      uk.gov.hmrc.digitalcontactstub.controllers.EmailProvi
 #     description: queue reset, this will delete all queue items
 ###
 +nocsrf
-GET        /reset      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.resetQueue
+GET        /mailgun/reset      uk.gov.hmrc.digitalcontactstub.controllers.MailgunMessageController.reset
