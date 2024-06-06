@@ -16,15 +16,16 @@
 
 package uk.gov.hmrc.digitalcontactstub.repositories
 
-import org.mongodb.scala.model.Filters
-import org.mongodb.scala.model.Sorts.descending
+import org.mongodb.scala.model
+import org.mongodb.scala.model.Sorts.{ ascending, descending }
+import org.mongodb.scala.model.{ Filters, IndexOptions }
 import uk.gov.hmrc.digitalcontactstub.models.email.EmailContent
-import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
-
+import uk.gov.hmrc.mongo.{ MongoComponent, MongoUtils }
 import java.time.Instant
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import java.util.concurrent.TimeUnit
+import javax.inject.{ Inject, Singleton }
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
 class EmailQueueRepository @Inject() (mongo: MongoComponent)(implicit ec: ExecutionContext)
@@ -34,6 +35,14 @@ class EmailQueueRepository @Inject() (mongo: MongoComponent)(implicit ec: Execut
       EmailContent.format,
       Seq.empty
     ) {
+
+  override def ensureIndexes(): Future[Seq[String]] =
+    MongoUtils.ensureIndexes(
+      collection,
+      Seq(model.IndexModel(ascending("timeStamp"), IndexOptions().expireAfter(2, TimeUnit.DAYS))),
+      replaceIndexes = true
+    )
+
   def save(emailContent: EmailContent): Future[Boolean] =
     collection.insertOne(emailContent.copy(timeStamp = Some(Instant.now))).toFuture().map(_.wasAcknowledged())
 
