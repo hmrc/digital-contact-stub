@@ -111,5 +111,5 @@ GET         /messages/email/:email      uk.gov.hmrc.digitalcontactstub.controlle
 #     description: delete queue
 ###
 +nocsrf
-DELETE         /deletemessages/:id      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.deleteQueueItem(id: String)
+POST         /deletemessages/:id      uk.gov.hmrc.digitalcontactstub.controllers.EmailProviderController.deleteQueueItem(id: String)
 

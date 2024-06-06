@@ -18,6 +18,8 @@ package uk.gov.hmrc.digitalcontactstub.models.email
 
 import play.api.libs.json.{ Json, OFormat }
 
+import java.time.Instant
+
 final case class EmailContent(
   channel: String,
   from: String,
@@ -27,7 +29,8 @@ final case class EmailContent(
   contactPolicy: ContactPolicy,
   requestedReceipts: Seq[String],
   content: Content,
-  notifyUrl: String
+  notifyUrl: String,
+  timeStamp: Option[Instant] = None // This field is not present in imi, only made for stub
 )
 
 final case class EmailAddress(value: String)
