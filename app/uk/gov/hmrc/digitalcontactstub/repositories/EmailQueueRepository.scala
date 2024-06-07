@@ -16,10 +16,14 @@
 
 package uk.gov.hmrc.digitalcontactstub.repositories
 
-import org.mongodb.scala.model.Filters
+import org.mongodb.scala.model
+import org.mongodb.scala.model.Sorts.{ ascending, descending }
+import org.mongodb.scala.model.{ Filters, IndexOptions }
 import uk.gov.hmrc.digitalcontactstub.models.email.EmailContent
-import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
+import uk.gov.hmrc.mongo.{ MongoComponent, MongoUtils }
+import java.time.Instant
+import java.util.concurrent.TimeUnit
 import javax.inject.{ Inject, Singleton }
 import scala.concurrent.{ ExecutionContext, Future }
 
@@ -31,14 +35,22 @@ class EmailQueueRepository @Inject() (mongo: MongoComponent)(implicit ec: Execut
       EmailContent.format,
       Seq.empty
     ) {
+
+  override def ensureIndexes(): Future[Seq[String]] =
+    MongoUtils.ensureIndexes(
+      collection,
+      Seq(model.IndexModel(ascending("timeStamp"), IndexOptions().expireAfter(3, TimeUnit.DAYS))),
+      replaceIndexes = true
+    )
+
   def save(emailContent: EmailContent): Future[Boolean] =
-    collection.insertOne(emailContent).toFuture().map(_.wasAcknowledged())
+    collection.insertOne(emailContent.copy(timeStamp = Some(Instant.now))).toFuture().map(_.wasAcknowledged())
 
   def deleteAll: Future[Boolean] =
     collection.deleteMany(Filters.empty()).toFuture().map(_.wasAcknowledged())
 
   def findAll: Future[Seq[EmailContent]] =
-    collection.find(Filters.empty()).limit(30).toFuture()
+    collection.find(Filters.empty()).limit(30).sort(descending("timeStamp")).toFuture()
 
   def findItem(id: String): Future[Seq[EmailContent]] =
     collection.find(Filters.eq("to.correlationId", id)).toFuture()

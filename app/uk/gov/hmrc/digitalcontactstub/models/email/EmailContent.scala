@@ -16,7 +16,10 @@
 
 package uk.gov.hmrc.digitalcontactstub.models.email
 
-import play.api.libs.json.{ Json, OFormat }
+import play.api.libs.json.{ Format, Json, OFormat }
+import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
+
+import java.time.Instant
 
 final case class EmailContent(
   channel: String,
@@ -27,7 +30,8 @@ final case class EmailContent(
   contactPolicy: ContactPolicy,
   requestedReceipts: Seq[String],
   content: Content,
-  notifyUrl: String
+  notifyUrl: String,
+  timeStamp: Option[Instant] = None // This field is not present in imi, only made for stub
 )
 
 final case class EmailAddress(value: String)
@@ -67,6 +71,8 @@ object ContactPolicy {
 }
 
 object EmailContent {
+  implicit val dateFormat: Format[Instant] =
+    MongoJavatimeFormats.instantFormat
   implicit val format: OFormat[EmailContent] = Json.format[EmailContent]
 }
 

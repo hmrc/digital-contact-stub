@@ -112,7 +112,7 @@ class EmailProviderController @Inject() (
   def deleteQueueItem(id: String): Action[AnyContent] = Action.async { _ =>
     emailQueueService
       .deleteQueueItem(id)
-      .map(_ => Redirect(Call("GET", "/digital-contact-stub/imi/messages")))
+      .map(_ => Redirect(Call("GET", "/digital-contact-stub/imi/viewMessages")))
   }
 
 }
