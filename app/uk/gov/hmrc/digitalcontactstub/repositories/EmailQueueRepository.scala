@@ -39,7 +39,7 @@ class EmailQueueRepository @Inject() (mongo: MongoComponent)(implicit ec: Execut
   override def ensureIndexes(): Future[Seq[String]] =
     MongoUtils.ensureIndexes(
       collection,
-      Seq(model.IndexModel(ascending("timeStamp"), IndexOptions().expireAfter(2, TimeUnit.DAYS))),
+      Seq(model.IndexModel(ascending("timeStamp"), IndexOptions().expireAfter(3, TimeUnit.DAYS))),
       replaceIndexes = true
     )
 

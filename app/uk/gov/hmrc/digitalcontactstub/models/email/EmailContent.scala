@@ -16,7 +16,8 @@
 
 package uk.gov.hmrc.digitalcontactstub.models.email
 
-import play.api.libs.json.{ Json, OFormat }
+import play.api.libs.json.{ Format, Json, OFormat }
+import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 
 import java.time.Instant
 
@@ -70,6 +71,8 @@ object ContactPolicy {
 }
 
 object EmailContent {
+  implicit val dateFormat: Format[Instant] =
+    MongoJavatimeFormats.instantFormat
   implicit val format: OFormat[EmailContent] = Json.format[EmailContent]
 }
 
