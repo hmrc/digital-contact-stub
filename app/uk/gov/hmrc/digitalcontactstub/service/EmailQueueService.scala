@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.digitalcontactstub.service
 
-import uk.gov.hmrc.digitalcontactstub.connector.EmailEventsConnector
 import uk.gov.hmrc.digitalcontactstub.models.email.{ EmailContent, EmailQueued }
 import uk.gov.hmrc.digitalcontactstub.repositories.EmailQueueRepository
 import java.time.LocalDateTime
@@ -27,8 +26,7 @@ import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
 class EmailQueueService @Inject() (
-  emailQueueRepository: EmailQueueRepository,
-  emailEventsConnector: EmailEventsConnector
+  emailQueueRepository: EmailQueueRepository
 ) {
 
   private def timeStamp = {
@@ -40,7 +38,6 @@ class EmailQueueService @Inject() (
     val transId = UUID.randomUUID()
     for {
       _ <- emailQueueRepository.save(emailContent)
-      _ <- emailEventsConnector.markSent(transId.toString)
       queued = EmailQueued(timeStamp, transId.toString, emailContent.to.map(_.correlationId).head, "queued")
     } yield queued
   }
