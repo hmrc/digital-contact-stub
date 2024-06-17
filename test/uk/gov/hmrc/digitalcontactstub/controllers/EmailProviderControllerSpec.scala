@@ -26,7 +26,6 @@ import play.api.libs.json.{ JsValue, Json }
 import play.api.mvc.Headers
 import play.api.test.Helpers.{ defaultAwaitTimeout, status }
 import play.api.test.{ FakeRequest, Helpers }
-import uk.gov.hmrc.digitalcontactstub.connector.EmailEventsConnector
 import uk.gov.hmrc.digitalcontactstub.models.email._
 import uk.gov.hmrc.digitalcontactstub.service.{ ConsentQueueService, EmailQueueService }
 import uk.gov.hmrc.digitalcontactstub.views.html.ViewEmailQueue
@@ -51,7 +50,6 @@ class EmailProviderControllerSpec extends PlaySpec with BeforeAndAfterEach with 
     super.beforeEach()
 
   class TestSetUp {
-    val mockEmailEventsConnector = mock[EmailEventsConnector]
     val emailQueueService = mock[EmailQueueService]
     val consentQueueService = mock[ConsentQueueService]
     val viewEmailQueue = mock[ViewEmailQueue]
