@@ -23,7 +23,7 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.play.PlaySpec
 import uk.gov.hmrc.digitalcontactstub.models.email._
 import uk.gov.hmrc.digitalcontactstub.repositories.EmailQueueRepository
-import java.util.UUID
+import uk.gov.hmrc.digitalcontactstub.utils.Encryption
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -42,6 +42,8 @@ class EmailQueueServiceSpec extends PlaySpec with ScalaFutures {
 
       val mockEmailQueueRepository = mock[EmailQueueRepository]
 
+      val encryption = mock[Encryption]
+
       val emailContent = EmailContent(
         Channel.EMAIL,
         "test@gmail.com",
@@ -53,7 +55,7 @@ class EmailQueueServiceSpec extends PlaySpec with ScalaFutures {
         Content("type", "subject", None, "text", "html"),
         "https://webhook.site/8517c49d-519e-4823-9ad9-9886c26e9a15"
       )
-      val emailQueueService = new EmailQueueService(mockEmailQueueRepository)
+      val emailQueueService = new EmailQueueService(mockEmailQueueRepository, encryption)
     }
   }
 }

@@ -16,23 +16,43 @@
 
 package uk.gov.hmrc.digitalcontactstub.service
 
-import uk.gov.hmrc.digitalcontactstub.models.email.{ EmailContent, EmailQueued }
+import play.api.libs.json.Json
+import uk.gov.hmrc.digitalcontactstub.models.email.{ EmailContent, EmailQueued, QueueItem }
 import uk.gov.hmrc.digitalcontactstub.repositories.EmailQueueRepository
+import uk.gov.hmrc.digitalcontactstub.utils.Encryption
+
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.UUID
+import java.util.{ Base64, UUID }
 import javax.inject.{ Inject, Singleton }
 import scala.concurrent.{ ExecutionContext, Future }
+import scala.util.{ Success, Try }
 
 @Singleton
 class EmailQueueService @Inject() (
-  emailQueueRepository: EmailQueueRepository
-) {
+  emailQueueRepository: EmailQueueRepository,
+  encryption: Encryption
+)(implicit ec: ExecutionContext) {
 
   private def timeStamp = {
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     LocalDateTime.now().format(formatter)
   }
+
+  private def decodeString(s: String) = {
+    val decodedBytes = Base64.getDecoder.decode(s)
+    val decodedString = new String(decodedBytes)
+    Json.parse(decodedString).as[Map[String, String]]
+  }
+
+  private def decryptTags(tags: Map[String, String]) =
+    tags.map { case (key, value) =>
+      val decryptedValue: String = Try(encryption.decrypt(value)) match {
+        case Success(text) => text.value
+        case _             => value
+      }
+      (key, decryptedValue)
+    }
 
   def addToQueue(emailContent: EmailContent)(implicit ec: ExecutionContext): Future[EmailQueued] = {
     val transId = UUID.randomUUID()
@@ -47,6 +67,22 @@ class EmailQueueService @Inject() (
   def getQueue = emailQueueRepository.findAll
   def getQueueItem(id: String) = emailQueueRepository.findItem(id)
   def getQueueItemByEmail(email: String) =
-    emailQueueRepository.findItemByEmail(email)
+    emailQueueRepository
+      .findItemByEmail(email)
+      .map(list =>
+        list.map(item =>
+          QueueItem(
+            item.channel,
+            item.from,
+            item.to,
+            decryptTags(decodeString(item.callbackData)),
+            item.options,
+            item.contactPolicy,
+            item.requestedReceipts,
+            item.content,
+            item.notifyUrl
+          )
+        )
+      )
   def deleteQueueItem(id: String) = emailQueueRepository.deleteItem(id)
 }

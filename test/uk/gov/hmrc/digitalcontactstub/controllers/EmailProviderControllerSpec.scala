@@ -23,7 +23,7 @@ import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.PlaySpec
 import play.api.http.Status.CREATED
 import play.api.libs.json.{ JsValue, Json }
-import play.api.mvc.Headers
+import play.api.mvc.{ Headers, Result }
 import play.api.test.Helpers.{ defaultAwaitTimeout, status }
 import play.api.test.{ FakeRequest, Helpers }
 import uk.gov.hmrc.digitalcontactstub.models.email._
@@ -41,8 +41,9 @@ class EmailProviderControllerSpec extends PlaySpec with BeforeAndAfterEach with 
     "return CREATED" in new TestSetUp {
       when(emailQueueService.addToQueue(any[EmailContent])(any[ExecutionContext]))
         .thenReturn(Future.successful(EmailQueued("", "", "", "")))
-      val result = controller.sendEmailToImiQueue(postFakeRequest)
-      status(result) mustBe CREATED
+      val result: Future[Result] = controller.sendEmailToImiQueue(postFakeRequest)
+      val statusCode: Int = status(result)
+      statusCode mustBe CREATED
     }
   }
 
