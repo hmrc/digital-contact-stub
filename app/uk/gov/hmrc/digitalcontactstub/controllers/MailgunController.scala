@@ -70,7 +70,7 @@ class MailgunMessageController @Inject() (override val controllerComponents: Con
     Ok(Json.toJson(StubState(domain).getSentMessages.map(_._2)))
   }
 
-  def reset(): Action[AnyContent] = Action {
+  def reset: Action[AnyContent] = Action {
     forAll(_.reset())
     Ok
   }

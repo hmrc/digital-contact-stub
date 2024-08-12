@@ -84,7 +84,7 @@ class EmailProviderController @Inject() (
     Future.successful(Ok(consentQueueService.remove(address).getOrElse(false).toString))
   }
 
-  def resetContactPolicyItem() = Action.async { _ =>
+  def resetContactPolicyItem = Action.async { _ =>
     consentQueueService.resetQueue()
     Future.successful(Ok("queue cleared"))
   }

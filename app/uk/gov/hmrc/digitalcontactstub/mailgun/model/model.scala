@@ -135,7 +135,7 @@ object MailgunEvent {
       (__ \ "delivery-status" \ "code").writeNullable[Int] and
       (__ \ "severity").writeNullable[String] and
       (__ \ "tags").write[Seq[String]]
-  )(unlift(MailgunEvent.unapply))
+  )(e => Tuple.fromProductTyped[MailgunEvent](e))
 }
 
 case class MailgunEvent(

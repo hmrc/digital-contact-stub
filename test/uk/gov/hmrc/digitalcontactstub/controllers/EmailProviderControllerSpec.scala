@@ -18,15 +18,15 @@ package uk.gov.hmrc.digitalcontactstub.controllers
 
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
-import org.mockito.MockitoSugar.mock
 import org.scalatest.BeforeAndAfterEach
+import org.scalatestplus.mockito.MockitoSugar.mock
 import org.scalatestplus.play.PlaySpec
 import play.api.http.Status.CREATED
 import play.api.libs.json.{ JsValue, Json }
 import play.api.mvc.{ Headers, Result }
 import play.api.test.Helpers.{ defaultAwaitTimeout, status }
 import play.api.test.{ FakeRequest, Helpers }
-import uk.gov.hmrc.digitalcontactstub.models.email._
+import uk.gov.hmrc.digitalcontactstub.models.email.*
 import uk.gov.hmrc.digitalcontactstub.service.{ ConsentQueueService, EmailQueueService }
 import uk.gov.hmrc.digitalcontactstub.views.html.ViewEmailQueue
 import uk.gov.hmrc.mongo.test.MongoSupport
