@@ -18,7 +18,7 @@ package uk.gov.hmrc.digitalcontactstub.service
 
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{ times, verify, when }
-import org.mockito.MockitoSugar.mock
+import org.scalatestplus.mockito.MockitoSugar.mock
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.play.PlaySpec
 import uk.gov.hmrc.digitalcontactstub.models.email._

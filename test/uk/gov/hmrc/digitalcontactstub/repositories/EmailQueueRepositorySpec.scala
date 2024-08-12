@@ -20,7 +20,7 @@ import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.PlaySpec
 import uk.gov.hmrc.digitalcontactstub.models.email._
 import uk.gov.hmrc.mongo.test.MongoSupport
-
+import org.mongodb.scala.ObservableFuture
 import scala.annotation.nowarn
 import scala.concurrent.ExecutionContext.Implicits.global
 

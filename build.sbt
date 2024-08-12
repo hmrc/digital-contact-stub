@@ -14,22 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-Global / majorVersion := 0
-Global / scalaVersion := "2.13.12"
+Global / majorVersion := 1
+Global / scalaVersion := "3.3.3"
 
 lazy val microservice = Project("digital-contact-stub", file("."))
   .enablePlugins(play.sbt.PlayScala, SbtDistributablesPlugin)
   .settings(
     libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test,
-    // suppress warnings in generated routes files
-    scalacOptions += "-Wconf:src=routes/.*:s",
-    scalacOptions += "-Wconf:cat=unused-imports&src=html/.*:s",
     pipelineStages := Seq(gzip),
-  )
-  .settings(
-      Test / scalacOptions := Seq(
-          "-Ywarn-value-discard"
-      )
   )
   .settings(resolvers += Resolver.jcenterRepo)
   .settings(CodeCoverageSettings.settings: _*)
