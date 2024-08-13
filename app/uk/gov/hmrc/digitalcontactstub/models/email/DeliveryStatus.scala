@@ -16,20 +16,38 @@
 
 package uk.gov.hmrc.digitalcontactstub.models.email
 
-import enumeratum.{ Enum, EnumEntry, PlayEnum }
+import play.api.libs.json.{ Format, JsError, JsResult, JsString, JsSuccess, JsValue }
 
 import scala.collection.immutable.IndexedSeq
 
-sealed trait DeliveryStatus extends EnumEntry
+enum DeliveryStatus {
+  case Submitted
+  case Read
+  case Delivered
+  case Bounce
+  case Failed
+  case Not_Verified
+  case Invalid
+  case Complained
 
-object DeliveryStatus extends Enum[DeliveryStatus] with PlayEnum[DeliveryStatus] {
-  override def values: IndexedSeq[DeliveryStatus] = findValues
-  case object Submitted extends DeliveryStatus
-  case object Read extends DeliveryStatus
-  case object Delivered extends DeliveryStatus
-  case object Bounce extends DeliveryStatus
-  case object Failed extends DeliveryStatus
-  case object Not_Verified extends DeliveryStatus
-  case object Invalid extends DeliveryStatus
-  case object Complained extends DeliveryStatus
+}
+
+object DeliveryStatus {
+
+  implicit val format: Format[DeliveryStatus] = new Format[DeliveryStatus] {
+    def reads(json: JsValue): JsResult[DeliveryStatus] = json match {
+      case JsString("Submitted")    => JsSuccess(Submitted)
+      case JsString("Read")         => JsSuccess(Read)
+      case JsString("Delivered")    => JsSuccess(Delivered)
+      case JsString("Bounce")       => JsSuccess(Bounce)
+      case JsString("Failed")       => JsSuccess(Failed)
+      case JsString("Not_Verified") => JsSuccess(Not_Verified)
+      case JsString("Invalid")      => JsSuccess(Invalid)
+      case JsString("Complained")   => JsSuccess(Complained)
+      case _                        => JsError("Invalid DeliveryStatus")
+    }
+
+    def writes(deliveryStatus: DeliveryStatus): JsValue = JsString(deliveryStatus.toString)
+
+  }
 }

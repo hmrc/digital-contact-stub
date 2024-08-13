@@ -16,17 +16,33 @@
 
 package uk.gov.hmrc.digitalcontactstub.models.email
 
-import enumeratum.{ Enum, EnumEntry, PlayEnum }
+import play.api.libs.json.{ Format, JsError, JsResult, JsString, JsSuccess, JsValue }
 
-sealed trait DeliveryDescription extends EnumEntry
+enum DeliveryDescription {
+  case Submitted
+  case Read
+  case Delivered
+  case Transient_ContentRejected
+  case Transient_General
+  case Recipient_not_consented
+  case Complained
+}
 
-object DeliveryDescription extends Enum[DeliveryDescription] with PlayEnum[DeliveryDescription] {
-  override def values: IndexedSeq[DeliveryDescription] = findValues
-  case object Submitted extends DeliveryDescription
-  case object Read extends DeliveryDescription
-  case object Delivered extends DeliveryDescription
-  case object Transient_ContentRejected extends DeliveryDescription
-  case object Transient_General extends DeliveryDescription
-  case object Recipient_not_consented extends DeliveryDescription
-  case object Complained extends DeliveryDescription
+object DeliveryDescription {
+
+  implicit val format: Format[DeliveryDescription] = new Format[DeliveryDescription] {
+    def reads(json: JsValue): JsResult[DeliveryDescription] = json match {
+      case JsString("Submitted")                 => JsSuccess(Submitted)
+      case JsString("Read")                      => JsSuccess(Read)
+      case JsString("Delivered")                 => JsSuccess(Delivered)
+      case JsString("Transient_ContentRejected") => JsSuccess(Transient_ContentRejected)
+      case JsString("Transient_General")         => JsSuccess(Transient_General)
+      case JsString("Recipient_not_consented")   => JsSuccess(Recipient_not_consented)
+      case JsString("Complained")                => JsSuccess(Complained)
+      case _                                     => JsError("Invalid DeliveryDescription")
+    }
+
+    def writes(deliveryDescription: DeliveryDescription): JsValue = JsString(deliveryDescription.toString)
+  }
+
 }
