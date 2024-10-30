@@ -18,14 +18,18 @@ package uk.gov.hmrc.digitalcontactstub.repositories
 
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.PlaySpec
-import uk.gov.hmrc.digitalcontactstub.models.email._
+import uk.gov.hmrc.digitalcontactstub.models.email.*
 import uk.gov.hmrc.mongo.test.MongoSupport
 import org.mongodb.scala.ObservableFuture
+import org.scalatest.concurrent.ScalaFutures
+import scala.concurrent.duration._
+
 import scala.annotation.nowarn
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class EmailQueueRepositorySpec extends PlaySpec with MongoSupport with BeforeAndAfterEach {
+class EmailQueueRepositorySpec extends PlaySpec with MongoSupport with BeforeAndAfterEach with ScalaFutures {
 
+  implicit val defaultPatience: PatienceConfig = PatienceConfig(timeout = 5.seconds, interval = 100.millis)
   "save" must {
     "add to email_queue" in new SetUp {
       emailQueueRepository.save(emailContent).futureValue mustBe true
