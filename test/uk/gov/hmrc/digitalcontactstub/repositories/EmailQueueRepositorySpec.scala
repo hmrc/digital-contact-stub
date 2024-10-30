@@ -29,7 +29,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class EmailQueueRepositorySpec extends PlaySpec with MongoSupport with BeforeAndAfterEach with ScalaFutures {
 
-  implicit val defaultPatience:PatienceConfig = PatienceConfig(timeout = 5.seconds, interval = 100.millis)
+  implicit val defaultPatience: PatienceConfig = PatienceConfig(timeout = 5.seconds, interval = 100.millis)
   "save" must {
     "add to email_queue" in new SetUp {
       emailQueueRepository.save(emailContent).futureValue mustBe true
