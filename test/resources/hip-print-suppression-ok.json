@@ -1,0 +1,12 @@
+{
+  "nationalInsuranceNumber": "YY000200A",
+  "bouncedFlag" : true,
+  "currentOptimisticLock": 1,
+  "printPreferences": [
+    {
+      "outputFormType": "NOT KNOWN",
+      "printStatus": "DIGITAL",
+      "lastUpdatedDate": "2025-04-12"
+    }
+  ]
+}

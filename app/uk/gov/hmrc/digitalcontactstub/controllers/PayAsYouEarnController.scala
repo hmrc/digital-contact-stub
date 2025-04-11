@@ -19,8 +19,10 @@ package uk.gov.hmrc.digitalcontactstub.controllers
 import play.api.Logging
 import play.api.libs.json.JsValue
 import play.api.mvc.{ Action, MessagesControllerComponents }
-import uk.gov.hmrc.digitalcontactstub.models.paye.PayeOutput
+import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
+import uk.gov.hmrc.digitalcontactstub.models.paye.{ HipNpsPrintSuppressionUpdateRequest, PayeOutput }
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
+import uk.gov.hmrc.domain.Nino
 
 import javax.inject.{ Inject, Singleton }
 import scala.concurrent.Future
@@ -33,28 +35,39 @@ class PayAsYouEarnController @Inject() (
     Action.async(parse.json) { implicit request =>
       withJsonBody[PayeOutput] { body =>
         logger.info(s"Received request: [$request] body: [$body]")
-
-        Future.successful {
-          nino.take(8) match {
-            case "YY000200" => Ok
-            case "YY000400" => BadRequest
-            case "YY000404" => NotFound
-            case "YY000502" => BadGateway
-            case "YY000503" => ServiceUnavailable
-            case _ =>
-              InternalServerError("""
-                                    |Send the corresponding Nino for a response:
-                                    |case "YY000200" => Ok
-                                    |case "YY000400" => BadRequest
-                                    |case "YY000404" => NotFound
-                                    |case "YY000500" => InternalServerError
-                                    |case "YY000502" => BadGateway
-                                    |case "YY000503" => ServiceUnavailable
-                                    |case _          => InternalServerError
-                                    |""".stripMargin)
-          }
-        }
+        process(nino)
       }
     }
 
+  def hipChangedOutputPreferences(): Action[JsValue] =
+    Action.async(parse.json) { implicit request =>
+      withJsonBody[HipNpsPrintSuppressionUpdateRequest] { body =>
+        import HipNpsPrintSuppressionUpdateRequest.reads
+        logger.info(s"Received request: [$request] body: [$body]")
+        val ninoStr = body.nationalInsuranceNumber.value
+        process(ninoStr)
+      }
+    }
+
+  private def process(ninoStr: String) =
+    Future.successful {
+      ninoStr.take(8) match {
+        case "YY000200" => Ok
+        case "YY000400" => BadRequest
+        case "YY000404" => NotFound
+        case "YY000502" => BadGateway
+        case "YY000503" => ServiceUnavailable
+        case _ =>
+          InternalServerError("""
+                                |Send the corresponding Nino for a response:
+                                |case "YY000200" => Ok
+                                |case "YY000400" => BadRequest
+                                |case "YY000404" => NotFound
+                                |case "YY000500" => InternalServerError
+                                |case "YY000502" => BadGateway
+                                |case "YY000503" => ServiceUnavailable
+                                |case _          => InternalServerError
+                                |""".stripMargin)
+      }
+    }
 }
