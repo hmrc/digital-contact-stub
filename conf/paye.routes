@@ -12,5 +12,5 @@
 #   Any other nino will yield 500 InternalServerError
 ###
 +nocsrf
-POST         /pay-as-you-earn/individuals/:nino/preferences/output uk.gov.hmrc.digitalcontactstub.controllers.PayAsYouEarnController.changedOutputPreferences(nino: String)
-
+POST         /pay-as-you-earn/individuals/:nino/preferences/output   uk.gov.hmrc.digitalcontactstub.controllers.PayAsYouEarnController.changedOutputPreferences(nino: String)
+POST         /paye/individual/print-preferences                      uk.gov.hmrc.digitalcontactstub.controllers.PayAsYouEarnController.hipChangedOutputPreferences()
