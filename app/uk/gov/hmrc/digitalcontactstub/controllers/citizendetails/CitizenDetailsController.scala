@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.digitalcontactstub.controllers
+package uk.gov.hmrc.digitalcontactstub.controllers.citizendetails
 
 import play.api.Logging
 import play.api.mvc.{ Action, AnyContent, MessagesControllerComponents }

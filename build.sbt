@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 Global / majorVersion := 1
-Global / scalaVersion := "3.3.3"
+Global / scalaVersion := "3.3.4"
 
 lazy val microservice = Project("digital-contact-stub", file("."))
   .enablePlugins(play.sbt.PlayScala, SbtDistributablesPlugin)
@@ -25,6 +25,16 @@ lazy val microservice = Project("digital-contact-stub", file("."))
   )
   .settings(resolvers += Resolver.jcenterRepo)
   .settings(CodeCoverageSettings.settings: _*)
+  .settings(
+    scalacOptions ++= List(
+      // Silence unused imports in template files
+      "-Wconf:msg=unused import&src=.*:s",
+      // Silence "Flag -XXX set repeatedly"
+      "-Wconf:msg=Flag.*repeatedly:s",
+      // Silence unused warnings on Play `routes` files
+      "-Wconf:src=routes/.*:s"
+    )
+  )
 
 Test / test := (Test / test)
   .dependsOn(scalafmtCheckAll)

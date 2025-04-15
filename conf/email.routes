@@ -1,4 +1,4 @@
 +nocsrf
-POST    /send-templated-email               uk.gov.hmrc.digitalcontactstub.controllers.EmailController.sendTemplatedEmail
+POST    /send-templated-email               uk.gov.hmrc.digitalcontactstub.controllers.email.EmailController.sendTemplatedEmail
 +nocsrf
-POST    /:domain/email                      uk.gov.hmrc.digitalcontactstub.controllers.EmailController.sendEmail(domain: String)
+POST    /:domain/email                      uk.gov.hmrc.digitalcontactstub.controllers.email.EmailController.sendEmail(domain: String)

@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.digitalcontactstub.controllers
+package uk.gov.hmrc.digitalcontactstub.controllers.imi
 
 import play.api.Logging
 import play.api.libs.json.{ JsValue, Json }
-import play.api.mvc._
+import play.api.mvc.*
 import uk.gov.hmrc.digitalcontactstub.models.email.EmailContent.format
 import uk.gov.hmrc.digitalcontactstub.models.email.EmailQueued.emailQueuedFormat
 import uk.gov.hmrc.digitalcontactstub.models.email.{ ConsentItem, EmailContent, ImiConsent }
