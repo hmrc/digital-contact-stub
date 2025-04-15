@@ -11,5 +11,5 @@
 #   Any other nino will yield 500 InternalServerError
 ###
 +nocsrf
-GET         /citizen-details/:nino/etag uk.gov.hmrc.digitalcontactstub.controllers.CitizenDetailsController.etag(nino: String)
-GET         /citizen-details/:nino/designatory-details/basic uk.gov.hmrc.digitalcontactstub.controllers.CitizenDetailsController.basic(nino: String)
+GET         /citizen-details/:nino/etag uk.gov.hmrc.digitalcontactstub.controllers.citizendetails.CitizenDetailsController.etag(nino: String)
+GET         /citizen-details/:nino/designatory-details/basic uk.gov.hmrc.digitalcontactstub.controllers.citizendetails.CitizenDetailsController.basic(nino: String)

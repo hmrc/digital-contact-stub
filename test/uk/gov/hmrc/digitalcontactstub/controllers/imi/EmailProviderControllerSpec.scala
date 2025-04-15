@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.digitalcontactstub.controllers
+package uk.gov.hmrc.digitalcontactstub.controllers.imi
 
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -26,6 +26,7 @@ import play.api.libs.json.{ JsValue, Json }
 import play.api.mvc.{ Headers, Result }
 import play.api.test.Helpers.{ defaultAwaitTimeout, status }
 import play.api.test.{ FakeRequest, Helpers }
+import uk.gov.hmrc.digitalcontactstub.controllers.imi.EmailProviderController
 import uk.gov.hmrc.digitalcontactstub.models.email.*
 import uk.gov.hmrc.digitalcontactstub.service.{ ConsentQueueService, EmailQueueService }
 import uk.gov.hmrc.digitalcontactstub.views.html.ViewEmailQueue

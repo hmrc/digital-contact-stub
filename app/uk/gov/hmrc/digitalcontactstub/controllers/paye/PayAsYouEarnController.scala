@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.digitalcontactstub.controllers
+package uk.gov.hmrc.digitalcontactstub.controllers.paye
 
 import play.api.Logging
 import play.api.libs.json.JsValue
-import play.api.mvc.{ Action, MessagesControllerComponents }
 import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
+import play.api.mvc.{ Action, MessagesControllerComponents }
 import uk.gov.hmrc.digitalcontactstub.models.paye.{ HipNpsPrintSuppressionUpdateRequest, PayeOutput }
-import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
 import javax.inject.{ Inject, Singleton }
 import scala.concurrent.Future
@@ -42,7 +42,7 @@ class PayAsYouEarnController @Inject() (
   def hipChangedOutputPreferences(): Action[JsValue] =
     Action.async(parse.json) { implicit request =>
       withJsonBody[HipNpsPrintSuppressionUpdateRequest] { body =>
-        import HipNpsPrintSuppressionUpdateRequest.reads
+
         logger.info(s"Received request: [$request] body: [$body]")
         val ninoStr = body.nationalInsuranceNumber.value
         process(ninoStr)

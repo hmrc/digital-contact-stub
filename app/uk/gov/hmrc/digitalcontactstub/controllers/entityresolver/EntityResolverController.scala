@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.digitalcontactstub.controllers
+package uk.gov.hmrc.digitalcontactstub.controllers.entityresolver
 
 import play.api.Logging
 import play.api.libs.json.Json

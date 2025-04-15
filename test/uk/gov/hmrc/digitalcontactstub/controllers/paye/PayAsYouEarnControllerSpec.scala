@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.digitalcontactstub.controllers
+package uk.gov.hmrc.digitalcontactstub.controllers.paye
 
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.PlaySpec
@@ -23,6 +23,7 @@ import play.api.libs.json.{ JsValue, Json }
 import play.api.mvc.{ Headers, Result }
 import play.api.test.Helpers.{ contentAsString, defaultAwaitTimeout, status }
 import play.api.test.{ FakeRequest, Helpers }
+import uk.gov.hmrc.digitalcontactstub.controllers.paye.PayAsYouEarnController
 import uk.gov.hmrc.mongo.test.MongoSupport
 
 import scala.concurrent.Future

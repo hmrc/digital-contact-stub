@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.digitalcontactstub.controllers
+package uk.gov.hmrc.digitalcontactstub.controllers.email
 
 import play.api.Logging
 import play.api.libs.json.JsValue
 import play.api.mvc.{ Action, AnyContent, ControllerComponents }
 import uk.gov.hmrc.digitalcontactstub.models.email.SendEmailRequest
+import uk.gov.hmrc.digitalcontactstub.models.email.SendEmailRequest.*
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
-import uk.gov.hmrc.digitalcontactstub.models.email.SendEmailRequest._
 
 import javax.inject.{ Inject, Singleton }
 import scala.concurrent.Future

@@ -24,7 +24,6 @@ import org.mongodb.scala.ObservableFuture
 import org.scalatest.concurrent.ScalaFutures
 import scala.concurrent.duration._
 
-import scala.annotation.nowarn
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class EmailQueueRepositorySpec extends PlaySpec with MongoSupport with BeforeAndAfterEach with ScalaFutures {
@@ -68,7 +67,6 @@ class EmailQueueRepositorySpec extends PlaySpec with MongoSupport with BeforeAnd
     }
   }
 
-  @nowarn("msg=discarded non-Unit value")
   override def afterEach(): Unit = {
     super.beforeEach()
     val setup = new SetUp

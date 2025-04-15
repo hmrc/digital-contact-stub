@@ -7,7 +7,7 @@
 ###
 
 +nocsrf
-POST        /:version/:domain/messages      uk.gov.hmrc.digitalcontactstub.controllers.MailgunMessageController.sendEmailToMailgunQueue(version: String, domain: uk.gov.hmrc.digitalcontactstub.mailgun.model.ValidatedDomain)
+POST        /:version/:domain/messages      uk.gov.hmrc.digitalcontactstub.controllers.mailgun.MailgunMessageController.sendEmailToMailgunQueue(version: String, domain: uk.gov.hmrc.digitalcontactstub.mailgun.model.ValidatedDomain)
 
 ###
 # summary: Get all queue items
@@ -16,7 +16,7 @@ POST        /:version/:domain/messages      uk.gov.hmrc.digitalcontactstub.contr
 #   200:
 #     description: View only 30 items in raw json format, we can use reset to see new results
 ###
-GET         /mailgun/messages      uk.gov.hmrc.digitalcontactstub.controllers.MailgunMessageController.getMailgunQueue(domain: String = "exampleDomain")
+GET         /mailgun/messages      uk.gov.hmrc.digitalcontactstub.controllers.mailgun.MailgunMessageController.getMailgunQueue(domain: String = "exampleDomain")
 
 
 
@@ -28,4 +28,4 @@ GET         /mailgun/messages      uk.gov.hmrc.digitalcontactstub.controllers.Ma
 #     description: queue reset, this will delete all queue items
 ###
 +nocsrf
-GET        /mailgun/reset      uk.gov.hmrc.digitalcontactstub.controllers.MailgunMessageController.reset
+GET        /mailgun/reset      uk.gov.hmrc.digitalcontactstub.controllers.mailgun.MailgunMessageController.reset

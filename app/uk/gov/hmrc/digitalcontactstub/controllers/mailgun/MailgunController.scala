@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.digitalcontactstub.controllers
+package uk.gov.hmrc.digitalcontactstub.controllers.mailgun
 
 import play.api.Logging
 import play.api.data.Form
 import play.api.data.Forms.{ list, mapping, optional, text }
 import play.api.libs.json.Json
 import play.api.mvc.{ Action, AnyContent, ControllerComponents }
+import uk.gov.hmrc.digitalcontactstub.mailgun.StubState
 import uk.gov.hmrc.digitalcontactstub.mailgun.StubState.forAll
 import uk.gov.hmrc.digitalcontactstub.mailgun.model.{ Email, ValidatedDomain }
-import uk.gov.hmrc.digitalcontactstub.mailgun.StubState
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendBaseController
 
 import javax.inject.Inject
