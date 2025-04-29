@@ -17,7 +17,7 @@
 package uk.gov.hmrc.digitalcontactstub.controllers.paye
 
 import play.api.Logging
-import play.api.libs.json.JsValue
+import play.api.libs.json.{ JsValue, Json }
 import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
 import play.api.mvc.{ Action, MessagesControllerComponents }
 import uk.gov.hmrc.digitalcontactstub.models.paye.{ HipNpsPrintSuppressionUpdateRequest, PayeOutput }
@@ -35,21 +35,19 @@ class PayAsYouEarnController @Inject() (
     Action.async(parse.json) { implicit request =>
       withJsonBody[PayeOutput] { body =>
         logger.info(s"Received request: [$request] body: [$body]")
-        process(nino)
+        processDES(nino)
       }
     }
 
   def hipChangedOutputPreferences(): Action[JsValue] =
     Action.async(parse.json) { implicit request =>
       withJsonBody[HipNpsPrintSuppressionUpdateRequest] { body =>
-
         logger.info(s"Received request: [$request] body: [$body]")
-        val ninoStr = body.nationalInsuranceNumber.value
-        process(ninoStr)
+        processHIP(ninoStr = body.nationalInsuranceNumber.value, lockValue = (body.currentOptimisticLock + 1).toShort)
       }
     }
 
-  private def process(ninoStr: String) =
+  private def processDES(ninoStr: String) =
     Future.successful {
       ninoStr.take(8) match {
         case "YY000200" => Ok
@@ -67,6 +65,34 @@ class PayAsYouEarnController @Inject() (
                                 |case "YY000502" => BadGateway
                                 |case "YY000503" => ServiceUnavailable
                                 |case _          => InternalServerError
+                                |""".stripMargin)
+      }
+    }
+
+  private def processHIP(ninoStr: String, lockValue: Short) =
+    Future.successful {
+      ninoStr.take(8) match {
+        case "YY000200" => Ok(Json.parse(s"""{ "updatedOptimisticLock": $lockValue }"""))
+        case "YY000400" => BadRequest
+        case "YY000403" => Forbidden
+        case "YY000404" => NotFound
+        case "YY000409" => Conflict
+        case "YY000422" => UnprocessableEntity
+        case "YY000500" => InternalServerError
+        case "YY000502" => BadGateway
+        case "YY000503" => ServiceUnavailable
+        case _ =>
+          InternalServerError("""
+                                |Send the corresponding Nino for a response:
+                                |  case "YY000200" => Ok(currentOptimisticLock + 1)
+                                |  case "YY000400" => BadRequest
+                                |  case "YY000403" => Forbidden
+                                |  case "YY000404" => NotFound
+                                |  case "YY000409" => Conflict
+                                |  case "YY000422" => UnprocessableEntity
+                                |  case "YY000500" => InternalServerError
+                                |  case "YY000502" => BadGateway
+                                |  case "YY000503" => ServiceUnavailable
                                 |""".stripMargin)
       }
     }
