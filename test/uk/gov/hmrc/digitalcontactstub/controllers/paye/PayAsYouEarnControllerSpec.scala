@@ -21,7 +21,7 @@ import org.scalatestplus.play.PlaySpec
 import play.api.http.Status.OK
 import play.api.libs.json.{ JsValue, Json }
 import play.api.mvc.{ Headers, Result }
-import play.api.test.Helpers.{ contentAsString, defaultAwaitTimeout, status }
+import play.api.test.Helpers.{ contentAsJson, contentAsString, defaultAwaitTimeout, status }
 import play.api.test.{ FakeRequest, Helpers }
 import uk.gov.hmrc.digitalcontactstub.controllers.paye.PayAsYouEarnController
 import uk.gov.hmrc.mongo.test.MongoSupport
@@ -35,9 +35,10 @@ class PayAsYouEarnControllerSpec extends PlaySpec with BeforeAndAfterEach with M
     "return OK" in new TestSetUp {
       val result: Future[Result] = controller.hipChangedOutputPreferences()(postFakeRequest)
 
-      val body = contentAsString(result)
+      val body = contentAsJson(result)
       val statusCode: Int = status(result)
       statusCode mustBe OK
+      (body \ "updatedOptimisticLock").as[Short] mustBe 2
     }
   }
 
