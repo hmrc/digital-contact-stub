@@ -23,7 +23,6 @@ lazy val microservice = Project("digital-contact-stub", file("."))
     libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test,
     pipelineStages := Seq(gzip),
   )
-  .settings(resolvers += Resolver.jcenterRepo)
   .settings(CodeCoverageSettings.settings: _*)
   .settings(
     scalacOptions ++= List(
