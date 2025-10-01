@@ -21,13 +21,15 @@ import play.api.libs.json.JsValue
 import play.api.mvc.{ Action, AnyContent, ControllerComponents }
 import uk.gov.hmrc.digitalcontactstub.models.email.SendEmailRequest
 import uk.gov.hmrc.digitalcontactstub.models.email.SendEmailRequest.*
+import uk.gov.hmrc.digitalcontactstub.service.EmailService
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
 import javax.inject.{ Inject, Singleton }
-import scala.concurrent.Future
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton()
-class EmailController @Inject() (cc: ControllerComponents) extends BackendController(cc) with Logging {
+class EmailController @Inject() (cc: ControllerComponents, emailService: EmailService)(implicit ec: ExecutionContext)
+    extends BackendController(cc) with Logging {
 
   def sendTemplatedEmail: Action[AnyContent] = Action.async {
     // Example body
@@ -54,4 +56,10 @@ class EmailController @Inject() (cc: ControllerComponents) extends BackendContro
     }
   }
 
+  def sendEmailPiller2Test(domain: String): Action[JsValue] = Action.async(parse.json) { implicit request =>
+    withJsonBody[SendEmailRequest] { r =>
+      logger.warn(s"request received to send email with number of rows as ${r.parameters} ")
+      emailService.sendEmail(r).map(res => Ok(s"Status returned from email: ${res.status} with body ${res.body}"))
+    }
+  }
 }
