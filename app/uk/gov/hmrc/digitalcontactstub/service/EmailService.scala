@@ -40,8 +40,11 @@ class EmailService @Inject() (
 
   def sendEmail(request: SendEmailRequest)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
     val parametersSize: Int = request.parameters("rowSize").toInt
-    def paramRow(rows: Int) =
-      List(1 to rows).map(i => Row(s"Field$i", s"GB2025-Validation Error returned in Piller2 Submission REF-2025-$i"))
+    def paramRow(rows: Int): Seq[Row] = {
+      val range: Seq[Int] = 1 to rows
+      range.map(i => Row(s"Field$i", s"Validation Error returned in Piller2 Submission REF-GB2025-$i"))
+    }
+
     val generateParamRows = stringify(Json.toJson(paramRow(parametersSize))).getBytes("UTF-8")
     val size: Double = generateParamRows.map(_.toInt).sum.toDouble
     logger.warn(s"Send Email Parameters size in bytes $size")
