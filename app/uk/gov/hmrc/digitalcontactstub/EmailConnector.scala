@@ -40,7 +40,9 @@ class EmailConnector @Inject() (httpClient: HttpClientV2, servicesConfig: Servic
 
   def sendEmail(request: SendEmailRequest)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
     val jsonRequest = Json.toJson(request)
-    logger.warn(s"Send Email Request size ${jsonRequest.toString.getBytes("UTF-8").map(_.toInt).sum} ")
+    val bytesSize = jsonRequest.toString.getBytes("UTF-8").length
+    val sizeInMB = bytesSize.toDouble / (1024 * 1024) // Convert to MB
+    logger.warn(s"Send Email Request size ${sizeInMB} ")
     httpClient
       .post(url("/hmrc/email"))
       .withBody(Json.toJson(request))
