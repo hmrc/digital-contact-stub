@@ -58,8 +58,11 @@ class EmailController @Inject() (cc: ControllerComponents, emailService: EmailSe
 
   def sendEmailPiller2Test(domain: String): Action[JsValue] = Action.async(parse.json) { implicit request =>
     withJsonBody[SendEmailRequest] { r =>
-      logger.warn(s"request received to send email with number of rows as ${r.parameters} ")
-      emailService.sendEmail(r).map(res => Ok(s"Status returned from email: ${res.status} with body ${res.body}"))
+      logger.warn(s"Send Email Request received with number of rows as ${r.parameters} ")
+      emailService
+        .sendEmail(r)
+        .map(res => Ok(s"Status returned from email: ${res.status} with body ${res.body}"))
+        .recover(ex => InternalServerError(s"Error returned from email ${ex.getMessage}"))
     }
   }
 }

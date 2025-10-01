@@ -42,12 +42,18 @@ class EmailService @Inject() (
     val parametersSize: Int = request.parameters("rowSize").toInt
     def paramRow(rows: Int): Seq[Row] = {
       val range: Seq[Int] = 1 to rows
-      range.map(i => Row(s"Field$i", s"Validation Error returned in Piller2 Submission REF-GB2025-$i"))
+      range.map(i =>
+        Row(
+          s"Piller2 Error Code $i",
+          "Failed Schema Validation",
+          "Critical",
+          s"DocTypeInd$i",
+          "The referenced file failed validation against schema"
+        )
+      )
     }
 
     val generateParamRows = stringify(Json.toJson(paramRow(parametersSize))).getBytes("UTF-8")
-    val size: Double = generateParamRows.map(_.toInt).sum.toDouble
-    logger.warn(s"Send Email Parameters size in bytes $size")
     val generateParameters = Map(
       "submission_errors" -> Base64.getEncoder.encodeToString(generateParamRows)
     )
@@ -66,8 +72,11 @@ class EmailService @Inject() (
 }
 
 final case class Row(
-  fieldName: String,
-  fieldError: String
+  errorCode: String,
+  businessRuleName: String,
+  errorLevel: String,
+  element: String,
+  description: String
 )
 
 object Row {

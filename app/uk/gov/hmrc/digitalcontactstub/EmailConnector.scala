@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.digitalcontactstub
 
+import play.api.Logging
 import play.api.libs.json.Json
 import uk.gov.hmrc.digitalcontactstub.models.email.SendEmailRequest
 import uk.gov.hmrc.http.{ HeaderCarrier, HttpException, HttpResponse }
@@ -29,7 +30,7 @@ import scala.concurrent.{ ExecutionContext, Future }
 @Singleton
 class EmailConnector @Inject() (httpClient: HttpClientV2, servicesConfig: ServicesConfig)(implicit
   ec: ExecutionContext
-) {
+) extends Logging {
 
   private def emailBaseUrl: String = servicesConfig.baseUrl("email")
 
@@ -37,9 +38,12 @@ class EmailConnector @Inject() (httpClient: HttpClientV2, servicesConfig: Servic
 
   import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
 
-  def sendEmail(request: SendEmailRequest)(implicit hc: HeaderCarrier): Future[HttpResponse] =
+  def sendEmail(request: SendEmailRequest)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
+    val jsonRequest = Json.toJson(request)
+    logger.warn(s"Send Email Request size ${jsonRequest.toString.getBytes("UTF-8").map(_.toInt).sum} ")
     httpClient
       .post(url("/hmrc/email"))
       .withBody(Json.toJson(request))
       .execute[HttpResponse]
+  }
 }
