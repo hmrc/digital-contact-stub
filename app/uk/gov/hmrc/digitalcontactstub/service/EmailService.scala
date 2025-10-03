@@ -53,9 +53,9 @@ class EmailService @Inject() (
       )
     }
 
-    val generateParamRows = stringify(Json.toJson(paramRow(parametersSize))).getBytes("UTF-8")
+    val generateParamRows = stringify(Json.toJson(paramRow(parametersSize)))
     val generateParameters = Map(
-      "submission_errors" -> Base64.getEncoder.encodeToString(generateParamRows)
+      "submission_errors" -> generateParamRows
     )
     val requestWithParams = SendEmailRequest(
       request.to,
