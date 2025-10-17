@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2023 HM Revenue & Customs
  *
@@ -15,15 +14,15 @@
  * limitations under the License.
  */
 Global / majorVersion := 1
-Global / scalaVersion := "3.3.4"
+Global / scalaVersion := "3.3.6"
 
 lazy val microservice = Project("digital-contact-stub", file("."))
   .enablePlugins(play.sbt.PlayScala, SbtDistributablesPlugin)
   .settings(
     libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test,
-    pipelineStages := Seq(gzip),
+    pipelineStages := Seq(gzip)
   )
-  .settings(CodeCoverageSettings.settings: _*)
+  .settings(CodeCoverageSettings.settings *)
   .settings(
     scalacOptions ++= List(
       // Silence unused imports in template files
