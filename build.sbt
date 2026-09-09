@@ -25,11 +25,8 @@ lazy val microservice = Project("digital-contact-stub", file("."))
   .settings(CodeCoverageSettings.settings *)
   .settings(
     scalacOptions ++= List(
-      // Silence unused imports in template files
       "-Wconf:msg=unused import&src=.*:s",
-      // Silence "Flag -XXX set repeatedly"
       "-Wconf:msg=Flag.*repeatedly:s",
-      // Silence unused warnings on Play `routes` files
       "-Wconf:src=routes/.*:s"
     )
   )
