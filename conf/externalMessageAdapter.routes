@@ -1,2 +1,20 @@
+###
+# summary: notifies external-message-adapter for EMAIL_BOUNCE event response for HIP API#5951
+# full-url: http://host:port/emailBounceback
+
+# responses depend on the Base64 encoded value of EmailBounceBackRequest.sourceData:
+#   Ok = 200 Ok
+#   BadRequest = 400 BadRequest
+#   NotFound = 404 NotFound
+#   InternalServerError = 500 InternalServerError
+#   ServiceUnavailable = 503 ServiceUnavailable
+#   Any other sourceData will yield 200 reponse
+
+# below scenarios for unauthorized access of endpoint
+# 401  = for the absence of mandatory headers correlationid and Authorization. Or Authorization header value does not have correct format
+# 400 = if correlationid does not have the corrrect format
+
+###
+
 +nocsrf
 POST         /emailBounceback                      uk.gov.hmrc.digitalcontactstub.controllers.externalmessageadapter.EmailBounceBackHandlerController.processEmailBounceBack
