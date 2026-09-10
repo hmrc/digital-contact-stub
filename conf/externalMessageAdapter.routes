@@ -3,12 +3,15 @@
 # full-url: http://host:port/emailBounceback
 
 # responses depend on the Base64 encoded value of EmailBounceBackRequest.sourceData:
+# below sourceData values are before encoding
+
+#   value response
 #   Ok = 200 Ok
 #   BadRequest = 400 BadRequest
 #   NotFound = 404 NotFound
 #   InternalServerError = 500 InternalServerError
 #   ServiceUnavailable = 503 ServiceUnavailable
-#   Any other sourceData will yield 200 reponse
+#   Any other sourceData will yield 200 response
 
 # below scenarios for unauthorized access of endpoint
 # 401  = for the absence of mandatory headers correlationid and Authorization. Or Authorization header value does not have correct format
