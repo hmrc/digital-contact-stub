@@ -78,8 +78,19 @@ class EmailBounceBackHandlerController @Inject() (cc: MessagesControllerComponen
       case "NotFound"            => Future.successful(NotFound)
       case "BadRequest"          => Future.successful(BadRequest(Json.toJson(create400ErrorResponse)))
       case "Forbidden"           => Future.successful(Forbidden)
-      case _                     => Future.successful(Ok(JsString("Request successfully processed")))
+      case _ =>
+        if (isExternalRefIdInCorrectFormat(request.externalRefId)) {
+          Future.successful(Ok(JsString("Request successfully processed")))
+        } else {
+          Future.successful(BadRequest(Json.toJson(createInvalidExternalRef400ErrorResponse)))
+        }
     }
+
+  private def isExternalRefIdInCorrectFormat(externalId: String) = {
+    val externalRefRegEx: Regex = """^[^\\s]{1,40}$""".r
+
+    externalRefRegEx.matches(externalId)
+  }
 
   private def create500ErrorResponse: EmailBounceBackResponseBody = {
     val responseString =
@@ -124,6 +135,23 @@ class EmailBounceBackHandlerController @Inject() (cc: MessagesControllerComponen
         |      {
         |        "type": "body.schema.pattern",
         |        "reason": "Path '/emailAddress' validation failed."
+        |      }
+        |    ]
+        |  }
+        |}""".stripMargin
+
+    Json.parse(responseString).as[EmailBounceBackResponseBody]
+  }
+
+  private def createInvalidExternalRef400ErrorResponse: EmailBounceBackResponseBody = {
+    val responseString =
+      """{
+        |  "origin": "HIP",
+        |  "response": {
+        |    "failures": [
+        |      {
+        |        "type": "body.schema.pattern",
+        |        "reason": "invalid externalRef id"
         |      }
         |    ]
         |  }

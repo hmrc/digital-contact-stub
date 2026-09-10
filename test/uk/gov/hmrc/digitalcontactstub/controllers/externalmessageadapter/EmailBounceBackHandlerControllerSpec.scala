@@ -185,6 +185,31 @@ class EmailBounceBackHandlerControllerSpec extends SpecBase {
         status(result) mustBe BAD_REQUEST
         contentAsJson(result) mustBe Json.toJson(responseOb)
       }
+
+      "with failure response when externalRefId is invalid" in new Setup {
+        val request = FakeRequest(
+          POST,
+          "/emailBounceback",
+          FakeHeaders(
+            Seq(("correlationid", correlationId), ("Authorization", "Basic 12345"), ("Csrf-Token", "nocheck"))
+          ),
+          Json.toJson(
+            emailBounceBackRequest
+              .copy(sourceData = "QmFkUmVxdWV", externalRefId = "9drtsdfyftdftftfsgggg7f1d675d544b009d6c3a8f7fb2e1c4")
+          )
+        )
+
+        val emailBounceFailureResponse =
+          EmailBounceBackFailuresResponse(
+            List(EmailBounceBackFailureResponse(reason = "invalid externalRef id"))
+          )
+
+        val responseOb = EmailBounceBackResponseBody(origin = HIP, response = Some(emailBounceFailureResponse))
+
+        val result: Future[Result] = route(application, request).get
+        status(result) mustBe BAD_REQUEST
+        contentAsJson(result) mustBe Json.toJson(responseOb)
+      }
     }
   }
 
