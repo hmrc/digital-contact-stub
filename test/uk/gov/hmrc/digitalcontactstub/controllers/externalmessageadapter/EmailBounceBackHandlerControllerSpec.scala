@@ -105,6 +105,20 @@ class EmailBounceBackHandlerControllerSpec extends SpecBase {
       status(result) mustBe NOT_FOUND
     }
 
+    "return Forbidden with failure response when source data value is Forbidden" in new Setup {
+      val request = FakeRequest(
+        POST,
+        "/emailBounceback",
+        FakeHeaders(
+          Seq(("correlationid", correlationId), ("Authorization", "Basic 12345"), ("Csrf-Token", "nocheck"))
+        ),
+        Json.toJson(emailBounceBackRequest.copy(sourceData = "Rm9yYmlkZGVu"))
+      )
+
+      val result: Future[Result] = route(application, request).get
+      status(result) mustBe FORBIDDEN
+    }
+
     "return Unauthorized" when {
       "mandatory header correlationid is missing" in new Setup {
         val request = FakeRequest(

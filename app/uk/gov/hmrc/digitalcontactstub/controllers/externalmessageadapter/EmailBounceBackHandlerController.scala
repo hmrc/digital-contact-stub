@@ -77,6 +77,7 @@ class EmailBounceBackHandlerController @Inject() (cc: MessagesControllerComponen
       case "ServiceUnavailable"  => Future.successful(ServiceUnavailable(Json.toJson(create503ErrorResponse)))
       case "NotFound"            => Future.successful(NotFound)
       case "BadRequest"          => Future.successful(BadRequest(Json.toJson(create400ErrorResponse)))
+      case "Forbidden"           => Future.successful(Forbidden)
       case _                     => Future.successful(Ok(JsString("Request successfully processed")))
     }
 
