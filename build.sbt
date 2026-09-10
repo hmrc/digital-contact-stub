@@ -19,11 +19,11 @@ Global / scalaVersion := "3.3.6"
 lazy val microservice = Project("digital-contact-stub", file("."))
   .enablePlugins(play.sbt.PlayScala, SbtDistributablesPlugin)
   .settings(
+    PlayKeys.playDefaultPort := 8185,
     libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test,
     pipelineStages := Seq(gzip)
   )
   .settings(CodeCoverageSettings.settings *)
-  .settings(PlayKeys.playDefaultPort := 8185)
   .settings(
     scalacOptions ++= List(
       "-Wconf:msg=unused import&src=.*:s",
