@@ -1,0 +1,2 @@
++nocsrf
+POST         /emailBounceback                      uk.gov.hmrc.digitalcontactstub.controllers.externalmessageadapter.EmailBounceBackHandlerController.processEmailBounceBack
