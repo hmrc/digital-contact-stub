@@ -23,6 +23,7 @@ lazy val microservice = Project("digital-contact-stub", file("."))
     pipelineStages := Seq(gzip)
   )
   .settings(CodeCoverageSettings.settings *)
+  .settings(PlayKeys.playDefaultPort := 8185)
   .settings(
     scalacOptions ++= List(
       "-Wconf:msg=unused import&src=.*:s",
