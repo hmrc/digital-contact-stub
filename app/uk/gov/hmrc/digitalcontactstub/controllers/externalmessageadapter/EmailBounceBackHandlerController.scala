@@ -21,7 +21,7 @@ import play.api.libs.json.{ JsString, JsValue, Json }
 import play.api.mvc.{ Action, AnyContent, Headers, MessagesControllerComponents }
 import play.mvc.Results.ok
 import uk.gov.hmrc.digitalcontactstub.models.email.SendEmailRequest
-import uk.gov.hmrc.digitalcontactstub.models.externalmessageadapter.{ EmailBounceBackFailuresResponse, EmailBounceBackRequest, EmailBounceBackResponseBody }
+import uk.gov.hmrc.digitalcontactstub.models.externalmessageadapter.*
 import uk.gov.hmrc.digitalcontactstub.utils.Utils
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
@@ -29,6 +29,9 @@ import javax.inject.{ Inject, Singleton }
 import scala.concurrent.Future
 import scala.util.matching.Regex
 import uk.gov.hmrc.digitalcontactstub.models.externalmessageadapter.EmailBounceBackResponseBody.format
+import uk.gov.hmrc.digitalcontactstub.utils.Utils.{ EMPTY_STRING, HYPHEN, uuidOfLength32AndWithoutHyphen }
+
+import java.util.UUID
 
 @Singleton
 class EmailBounceBackHandlerController @Inject() (cc: MessagesControllerComponents)
@@ -50,14 +53,16 @@ class EmailBounceBackHandlerController @Inject() (cc: MessagesControllerComponen
             correlationIdHeaderName
           ) || !isAuthHeaderValueInCorrectFormat(authHeaderValue)
         ) {
-          Future.successful(Unauthorized)
+          Future.successful(Unauthorized(unauthorisedResponse))
         } else {
           val correlationIdHeaderValue = requestHeaders.get(correlationIdHeaderName).getOrElse(emptyString)
 
           if (isCorrelationIdInCorrectFormat(correlationIdHeaderValue)) {
             processPayloadAfterHeadersCheck(emailBounceReq)
           } else {
-            Future.successful(BadRequest)
+            Future.successful(
+              BadRequest(Json.toJson(create400ErrorResponse("Invalid correlationId format")))
+            )
           }
         }
       }
@@ -65,8 +70,9 @@ class EmailBounceBackHandlerController @Inject() (cc: MessagesControllerComponen
 
   private def isCorrelationIdInCorrectFormat(id: String) = {
     val correlationIdRegex: Regex = """[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}""".r
+    val isCheckForCorrelationIdEnabled = false // Has been added as API team to confirm the correlationId pattern
 
-    correlationIdRegex.matches(id)
+    if (isCheckForCorrelationIdEnabled) correlationIdRegex.matches(id) else true
   }
 
   private def isAuthHeaderValueInCorrectFormat(id: String) = id.startsWith("Basic")
@@ -75,9 +81,11 @@ class EmailBounceBackHandlerController @Inject() (cc: MessagesControllerComponen
     Utils.decodeStringFromBase64(request.sourceData) match {
       case "InternalServerError" => Future.successful(InternalServerError(Json.toJson(create500ErrorResponse)))
       case "ServiceUnavailable"  => Future.successful(ServiceUnavailable(Json.toJson(create503ErrorResponse)))
-      case "NotFound"            => Future.successful(NotFound)
-      case "BadRequest"          => Future.successful(BadRequest(Json.toJson(create400ErrorResponse)))
-      case "Forbidden"           => Future.successful(Forbidden)
+      case "NotFound"            => Future.successful(NotFound(notFoundResponse))
+      case "BadRequest" =>
+        Future.successful(BadRequest(Json.toJson(create400ErrorResponse("Path '/emailAddress' validation failed."))))
+
+      case "Forbidden" => Future.successful(Forbidden(forbiddenResponse))
       case _ =>
         if (isExternalRefIdInCorrectFormat(request.externalRefId)) {
           Future.successful(Ok(JsString("Request successfully processed")))
@@ -126,19 +134,19 @@ class EmailBounceBackHandlerController @Inject() (cc: MessagesControllerComponen
     Json.parse(responseString).as[EmailBounceBackResponseBody]
   }
 
-  private def create400ErrorResponse: EmailBounceBackResponseBody = {
+  private def create400ErrorResponse(reason: String): EmailBounceBackResponseBody = {
     val responseString =
-      """{
-        |  "origin": "HIP",
-        |  "response": {
-        |    "failures": [
-        |      {
-        |        "type": "body.schema.pattern",
-        |        "reason": "Path '/emailAddress' validation failed."
-        |      }
-        |    ]
-        |  }
-        |}""".stripMargin
+      s"""{
+         |  "origin": "HIP",
+         |  "response": {
+         |    "failures": [
+         |      {
+         |        "type": "body.schema.pattern",
+         |        "reason": "$reason"
+         |      }
+         |    ]
+         |  }
+         |}""".stripMargin
 
     Json.parse(responseString).as[EmailBounceBackResponseBody]
   }
@@ -159,4 +167,15 @@ class EmailBounceBackHandlerController @Inject() (cc: MessagesControllerComponen
 
     Json.parse(responseString).as[EmailBounceBackResponseBody]
   }
+
+  private def notFoundResponse: JsValue =
+    Json.toJson(EmailBounce4xxResponse("NotFound", Some(uuidOfLength32AndWithoutHyphen)))
+
+  private def forbiddenResponse: JsValue =
+    Json.toJson(EmailBounce4xxResponse("Forbidden", Some(uuidOfLength32AndWithoutHyphen)))
+
+  private def unauthorisedResponse: JsValue =
+    Json.toJson(
+      EmailBounce4xxResponse("Authentication information is missing or invalid", Some(uuidOfLength32AndWithoutHyphen))
+    )
 }

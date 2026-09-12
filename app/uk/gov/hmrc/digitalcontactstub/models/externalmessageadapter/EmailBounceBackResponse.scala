@@ -56,7 +56,7 @@ object EmailBounceBackResponseBody {
   implicit val format: OFormat[EmailBounceBackResponseBody] = Json.format[EmailBounceBackResponseBody]
 }
 
-case class EmailBounce4xxResponse(message: String)
+case class EmailBounce4xxResponse(message: String, request_id: Option[String])
 
 object EmailBounce4xxResponse {
   implicit val format: OFormat[EmailBounce4xxResponse] = Json.format[EmailBounce4xxResponse]

@@ -63,7 +63,7 @@ GET http://localhost:8185/digital-contact-stub/mailgun/reset
 ### Process email bounce event over HIP
 
 ```http
-POST http://localhost:<port>/emailBounceback
+POST http://localhost:<port>/ccmp/emailBounceback
 
 {
 "reason":"EMAIL_BOUNCE",

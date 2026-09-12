@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.digitalcontactstub.utils
 
+import uk.gov.hmrc.digitalcontactstub.utils.Utils.*
+
 class UtilsSpec extends SpecBase {
 
   "encodeStringToBase64" should {
@@ -24,11 +26,26 @@ class UtilsSpec extends SpecBase {
     val encodedString = "VGhpcyBpcyBmb3IgdGVzdA=="
 
     "encode the input string correctly" in {
-      Utils.encodeStringToBase64(originalString) mustBe encodedString
+      encodeStringToBase64(originalString) mustBe encodedString
     }
+  }
+
+  "decodeStringFromBase64" should {
+    val originalString = "This is for test"
+    val encodedString = "VGhpcyBpcyBmb3IgdGVzdA=="
 
     "decode the input string correctly" in {
       Utils.decodeStringFromBase64(encodedString) mustBe originalString
     }
   }
+
+  "uuidOfLength32AndWithoutHyphen" should {
+    "return correct uuid value of length 32 and without hyphen" in {
+      val uuid = uuidOfLength32AndWithoutHyphen
+
+      uuid.length mustBe 32
+      uuid.contains(HYPHEN) mustBe false
+    }
+  }
+
 }

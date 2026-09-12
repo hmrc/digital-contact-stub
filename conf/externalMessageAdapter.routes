@@ -1,6 +1,6 @@
 ###
 # summary: notifies external-message-adapter for EMAIL_BOUNCE event response for HIP API#5951
-# full-url: http://host:port/emailBounceback
+# full-url: http://host:port/ccmp/emailBounceback
 
 # responses depend on the Base64 encoded value of EmailBounceBackRequest.sourceData:
 # below sourceData values are before encoding
@@ -20,4 +20,4 @@
 ###
 
 +nocsrf
-POST         /emailBounceback                      uk.gov.hmrc.digitalcontactstub.controllers.externalmessageadapter.EmailBounceBackHandlerController.processEmailBounceBack
+POST         /ccmp/emailBounceback                      uk.gov.hmrc.digitalcontactstub.controllers.externalmessageadapter.EmailBounceBackHandlerController.processEmailBounceBack

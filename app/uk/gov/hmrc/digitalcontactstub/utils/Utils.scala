@@ -16,9 +16,14 @@
 
 package uk.gov.hmrc.digitalcontactstub.utils
 
-import java.util.Base64
+import java.util.{ Base64, UUID }
 
 object Utils {
+
+  val EMPTY_STRING = ""
+  val HYPHEN = "-"
+
+  def uuidOfLength32AndWithoutHyphen: String = UUID.randomUUID().toString.replace(HYPHEN, EMPTY_STRING)
 
   def encodeStringToBase64(inputString: String): String =
     Base64.getEncoder.encodeToString(inputString.getBytes("UTF-8"))
