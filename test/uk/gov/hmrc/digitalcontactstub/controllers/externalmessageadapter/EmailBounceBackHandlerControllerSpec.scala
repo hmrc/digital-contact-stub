@@ -48,7 +48,7 @@ class EmailBounceBackHandlerControllerSpec extends SpecBase {
         Json.toJson(emailBounceBackRequest.copy(sourceData = "T2s="))
       )
 
-      val result: Future[Result] = route(application, request).get
+      val result: Future[Result] = route(application, request).head
       status(result) mustBe OK
       contentAsJson(result) mustBe JsString("Request successfully processed")
     }
@@ -67,7 +67,7 @@ class EmailBounceBackHandlerControllerSpec extends SpecBase {
         EmailBounceBackFailuresResponse(List(EmailBounceBackFailureResponse(reason = "server error")))
       val responseOb = EmailBounceBackResponseBody(origin = HIP, response = Some(emailBounceFailureResponse))
 
-      val result: Future[Result] = route(application, request).get
+      val result: Future[Result] = route(application, request).head
       status(result) mustBe INTERNAL_SERVER_ERROR
       contentAsJson(result) mustBe Json.toJson(responseOb)
     }
@@ -87,7 +87,7 @@ class EmailBounceBackHandlerControllerSpec extends SpecBase {
 
       val responseOb = EmailBounceBackResponseBody(origin = HIP, response = Some(emailBounceFailureResponse))
 
-      val result: Future[Result] = route(application, request).get
+      val result: Future[Result] = route(application, request).head
       status(result) mustBe SERVICE_UNAVAILABLE
       contentAsJson(result) mustBe Json.toJson(responseOb)
     }
@@ -102,7 +102,7 @@ class EmailBounceBackHandlerControllerSpec extends SpecBase {
         Json.toJson(emailBounceBackRequest.copy(sourceData = "Tm90Rm91bmQ="))
       )
 
-      val result: Future[Result] = route(application, request).get
+      val result: Future[Result] = route(application, request).head
       status(result) mustBe NOT_FOUND
     }
 
@@ -116,7 +116,7 @@ class EmailBounceBackHandlerControllerSpec extends SpecBase {
         Json.toJson(emailBounceBackRequest.copy(sourceData = "Rm9yYmlkZGVu"))
       )
 
-      val result: Future[Result] = route(application, request).get
+      val result: Future[Result] = route(application, request).head
       status(result) mustBe FORBIDDEN
     }
 
@@ -129,7 +129,7 @@ class EmailBounceBackHandlerControllerSpec extends SpecBase {
           Json.toJson(emailBounceBackRequest)
         )
 
-        val result: Future[Result] = route(application, request).get
+        val result: Future[Result] = route(application, request).head
         status(result) mustBe UNAUTHORIZED
       }
 
@@ -141,7 +141,7 @@ class EmailBounceBackHandlerControllerSpec extends SpecBase {
           Json.toJson(emailBounceBackRequest)
         )
 
-        val result: Future[Result] = route(application, request).get
+        val result: Future[Result] = route(application, request).head
         status(result) mustBe UNAUTHORIZED
       }
     }
@@ -161,7 +161,7 @@ class EmailBounceBackHandlerControllerSpec extends SpecBase {
           Json.toJson(emailBounceBackRequest)
         )
 
-        val result: Future[Result] = route(application, request).get
+        val result: Future[Result] = route(application, request).head
         status(result) mustBe BAD_REQUEST
       }
 
@@ -182,7 +182,7 @@ class EmailBounceBackHandlerControllerSpec extends SpecBase {
 
         val responseOb = EmailBounceBackResponseBody(origin = HIP, response = Some(emailBounceFailureResponse))
 
-        val result: Future[Result] = route(application, request).get
+        val result: Future[Result] = route(application, request).head
         status(result) mustBe BAD_REQUEST
         contentAsJson(result) mustBe Json.toJson(responseOb)
       }
@@ -207,7 +207,7 @@ class EmailBounceBackHandlerControllerSpec extends SpecBase {
 
         val responseOb = EmailBounceBackResponseBody(origin = HIP, response = Some(emailBounceFailureResponse))
 
-        val result: Future[Result] = route(application, request).get
+        val result: Future[Result] = route(application, request).head
         status(result) mustBe BAD_REQUEST
         contentAsJson(result) mustBe Json.toJson(responseOb)
       }
