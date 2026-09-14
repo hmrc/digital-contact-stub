@@ -15,7 +15,7 @@
 
 # below scenarios for unauthorized access of endpoint
 # 401  = for the absence of mandatory headers correlationid and Authorization. Or Authorization header value does not have correct format
-# 400 = if correlationid does not have the corrrect format
+# 400 = if correlationid does not have the correct format
 
 ###
 
