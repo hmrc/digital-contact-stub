@@ -147,7 +147,7 @@ class EmailBounceBackHandlerControllerSpec extends SpecBase {
     }
 
     "return BAD_REQUEST" when {
-      "header correlationid is of incorrect format" ignore new Setup {
+      "header correlationid is of incorrect format" in new Setup {
         implicit val hc: HeaderCarrier = HeaderCarrier(authorization = Some(Authorization("Bearer 12345")))
 
         val invalidCorrelationId: String = UUID.randomUUID().toString.replace(HYPHEN, EMPTY_STRING)
@@ -161,8 +161,16 @@ class EmailBounceBackHandlerControllerSpec extends SpecBase {
           Json.toJson(emailBounceBackRequest)
         )
 
+        val emailBounceFailureResponse =
+          EmailBounceBackFailuresResponse(
+            List(EmailBounceBackFailureResponse(reason = "Invalid correlationId format"))
+          )
+
+        val responseOb = EmailBounceBackResponseBody(origin = HIP, response = Some(emailBounceFailureResponse))
+
         val result: Future[Result] = route(application, request).head
         status(result) mustBe BAD_REQUEST
+        contentAsJson(result) mustBe Json.toJson(responseOb)
       }
 
       "with failure response when source data value is BadRequest" in new Setup {
@@ -217,7 +225,7 @@ class EmailBounceBackHandlerControllerSpec extends SpecBase {
   trait Setup {
     val correlationidRegex: Regex = """[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}""".r
     val correlationId: String = UUID.randomUUID().toString
-    val endPointRoute: String = "/ccmp/emailBounceback"
+    val endPointRoute: String = "/ccmp/emailbounceback"
 
     val emailBounceBackRequest = EmailBounceBackRequest(
       reason = "EMAIL_BOUNCE",
