@@ -69,7 +69,7 @@ class EmailBounceBackHandlerController @Inject() (cc: MessagesControllerComponen
     }
 
   private def isCorrelationIdInCorrectFormat(id: String) = {
-    val correlationIdRegex: Regex = """[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}""".r
+    val correlationIdRegex: Regex = """^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$""".r
 
     correlationIdRegex.matches(id)
   }
