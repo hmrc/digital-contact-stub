@@ -19,17 +19,15 @@ Global / scalaVersion := "3.3.6"
 lazy val microservice = Project("digital-contact-stub", file("."))
   .enablePlugins(play.sbt.PlayScala, SbtDistributablesPlugin)
   .settings(
+    PlayKeys.playDefaultPort := 8185,
     libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test,
     pipelineStages := Seq(gzip)
   )
   .settings(CodeCoverageSettings.settings *)
   .settings(
     scalacOptions ++= List(
-      // Silence unused imports in template files
       "-Wconf:msg=unused import&src=.*:s",
-      // Silence "Flag -XXX set repeatedly"
       "-Wconf:msg=Flag.*repeatedly:s",
-      // Silence unused warnings on Play `routes` files
       "-Wconf:src=routes/.*:s"
     )
   )

@@ -6,4 +6,5 @@
 ->         /                          citizenDetails.Routes
 ->         /                          imi.Routes
 ->         /                          mailgun.Routes
+->         /                          externalMessageAdapter.Routes
 ->         /                          health.Routes
