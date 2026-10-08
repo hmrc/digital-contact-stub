@@ -1,0 +1,2 @@
++nocsrf
+POST    /eis/sa-forms/suppression/send-letter               uk.gov.hmrc.digitalcontactstub.controllers.eis.EisController.sendSuppressionLetter
