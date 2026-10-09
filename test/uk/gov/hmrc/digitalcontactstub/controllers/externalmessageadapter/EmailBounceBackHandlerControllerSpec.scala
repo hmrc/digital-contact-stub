@@ -231,7 +231,7 @@ class EmailBounceBackHandlerControllerSpec extends SpecBase {
       reason = "EMAIL_BOUNCE",
       sourceData = "SGVsbG8gd29ybGQ=",
       emailAddress = "test@test.com",
-      formId = Some("CH(A)1700"),
+      formId = Some("CHA1700"),
       properties = None,
       externalRefId = "9d7f1d675d544b009d6c3a8f7fb2e1c4"
     )

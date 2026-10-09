@@ -69,7 +69,7 @@ POST http://localhost:<port>/ccmp/emailBounceback
 "reason":"EMAIL_BOUNCE",
 "sourceData":"SGVsbG8gd29ybGQ=",
 "emailAddress":"test@test.com",
-"formId":"CH(A)1700",
+"formId":"CHA1700",
 "externalRefId":"9d7f1d675d544b009d6c3a8f7fb2e1c4"
 }
 ```
