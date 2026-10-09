@@ -8,3 +8,4 @@
 ->         /                          mailgun.Routes
 ->         /                          externalMessageAdapter.Routes
 ->         /                          health.Routes
+->         /                          eis.Routes
