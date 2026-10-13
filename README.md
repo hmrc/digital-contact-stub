@@ -75,7 +75,7 @@ POST http://localhost:<port>/ccmp/emailBounceback
 ```
 Responds with status code:
 
-- 200 if request is successfully processed
+- 200 if the request is successfully processed
 - 400 (Bad Request) if either correlationid header is not in correct format or request field is not as per schema
 - 401 (Unauthorized) if any of mandatory headers (Authorization and correlationid) is missing or Authorization header
    value is not of correct format
@@ -83,6 +83,26 @@ Responds with status code:
 - 404 (NotFound)
 - 500 (InternalServerError)
 - 503 (ServiceUnavailable)
+
+
+### Process sending suppression letter (API #1297)
+
+```http
+POST http://localhost:<port>/sa-forms/suppression/send-letter
+
+{
+"reason" : "a reason",
+"sourceData" : "source data",
+"emailAddress" : "email@address.com",
+"formId" : "form id",  -- optional
+"properties" : "properties" -- optional, any Json value
+}
+``````
+Responds with the code
+- 200 if the request is successfully processed
+- 400 (Bad Request) if there is invalid formatted correllation id UUID header ("X-Correlation-ID"), missing/empty
+  "Environment" header or an invalid JSON payload
+- 401 (Unauthorized) - "Authorization" header is missing or wrong format
 
 ### License
 
