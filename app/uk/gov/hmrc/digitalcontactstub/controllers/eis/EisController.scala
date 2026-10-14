@@ -53,7 +53,7 @@ class EisController @Inject() (cc: ControllerComponents) extends BackendControll
   private def validateRequestContents(request: Request[JsValue]): Seq[EisFailure] = {
     val headers = request.headers
     val hasValidCorrelationIdHeader =
-      headers.get("X-Correlation-ID").exists(idText => idText.matches("[a-fA-F0-9]{32}"))
+      headers.get("X-Correlation-ID").exists(idText => idText.matches("[a-fA-F0-9]{31}"))
     val hasEnvironmentHeader =
       headers.get("Environment").exists(_.trim.nonEmpty)
 
