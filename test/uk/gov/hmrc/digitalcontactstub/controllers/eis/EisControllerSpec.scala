@@ -38,8 +38,8 @@ class EisControllerSpec extends PlaySpec with OptionValues with ScalaFutures {
   private val eisController = new EisController(Helpers.stubControllerComponents())
 
   object Header {
-    val validAuth: (String, String) = (AUTHORIZATION, "Bearer: xxxxx")
-    val validCorrelationId: (String, String) = ("X-Correlation-ID", "0177f8d6-e50a-41f0-a230-ad48e44f5a29")
+    val validAuth: (String, String) = (AUTHORIZATION, "Bearer xxxxx")
+    val validCorrelationId: (String, String) = ("X-Correlation-ID", "0177f8d6e50a41f0a230ad48e44f5a29")
     val validEnvironment: (String, String) = ("Environment", "xxxx")
 
     val validHeaders: List[(String, String)] = List(validAuth, validCorrelationId, validEnvironment)

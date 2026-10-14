@@ -35,7 +35,7 @@ class EisController @Inject() (cc: ControllerComponents) extends BackendControll
   def sendSuppressionLetter: Action[JsValue] = Action.async(parse.json) { implicit request: Request[JsValue] =>
     val hasValidAuthHeader = request.headers
       .get(AUTHORIZATION)
-      .exists(_.startsWith("Bearer: "))
+      .exists(_.startsWith("Bearer "))
 
     if (!hasValidAuthHeader) {
       logger.debug(s"A valid AUTHORIZATION header was not received")
@@ -53,7 +53,7 @@ class EisController @Inject() (cc: ControllerComponents) extends BackendControll
   private def validateRequestContents(request: Request[JsValue]): Seq[EisFailure] = {
     val headers = request.headers
     val hasValidCorrelationIdHeader =
-      headers.get("X-Correlation-ID").exists(idText => Try(UUID.fromString(idText)).isSuccess)
+      headers.get("X-Correlation-ID").exists(idText => idText.matches("[a-fA-F0-9]{32}"))
     val hasEnvironmentHeader =
       headers.get("Environment").exists(_.trim.nonEmpty)
 
